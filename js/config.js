@@ -41,11 +41,20 @@ const PORTAL = {
       ]
     },
     {
-      id: "3primaria",
-      nombre: "3.º Primaria",
-      icono: "🎮",
-      descripcion: "Periféricos y actividades interactivas.",
-      juegos: []
+      id:"3primaria",
+      nombre:"3.º Primaria",
+      icono:"🎮",
+      descripcion:"Periféricos y actividades interactivas.",
+      juegos:[
+        {
+          id:"perifericos-entrada-salida-mixtos",
+          nombre:"Periféricos: entrada, salida y mixtos",
+          descripcion:"Clasifica diferentes periféricos según su función.",
+          icono:"🖥️",
+          archivo:"juegos/3primaria/perifericos-entrada-salida-mixtos.html",
+          disponible:true
+        }
+      ]
     },
     {
       id: "4primaria",
