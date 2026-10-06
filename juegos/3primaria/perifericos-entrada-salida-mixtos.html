@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periféricos: Entrada, Salida y Mixtos</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe, #f0fdf4);
+    color: #1e293b;
+}
+
+header {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    text-align: center;
+    padding: 25px 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-size: 18px;
+}
+
+.contenedor {
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 15px;
+}
+
+.info {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.10);
+    text-align: center;
+}
+
+.info h2 {
+    margin-top: 0;
+}
+
+.progreso {
+    width: 100%;
+    height: 15px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.barra {
+    height: 100%;
+    width: 0%;
+    background: #22c55e;
+    transition: width 0.3s;
+}
+
+.pregunta {
+    background: white;
+    margin-top: 20px;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.10);
+}
+
+.pregunta h2 {
+    color: #2563eb;
+}
+
+.opciones {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.opcion {
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    cursor: pointer;
+    font-size: 17px;
+    text-align: left;
+    transition: 0.2s;
+}
+
+.opcion:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+.opcion.correcta {
+    background: #bbf7d0;
+    color: #166534;
+}
+
+.opcion.incorrecta {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+.mensaje {
+    margin-top: 18px;
+    font-size: 19px;
+    font-weight: bold;
+    min-height: 30px;
+}
+
+.boton {
+    border: none;
+    padding: 14px 22px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-size: 17px;
+    cursor: pointer;
+    margin-top: 18px;
+}
+
+.boton:hover {
+    background: #1d4ed8;
+}
+
+.resultado {
+    display: none;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.10);
+}
+
+.resultado .emoji {
+    font-size: 60px;
+}
+
+.puntaje {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.volver {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: white;
+    background: #475569;
+    padding: 12px 20px;
+    border-radius: 10px;
+}
+
+.volver:hover {
+    background: #334155;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🖥️ Periféricos de la computadora</h1>
+    <p>Entrada, salida y mixtos</p>
+</header>
+
+<div class="contenedor">
+
+    <div class="info">
+        <h2>🎮 ¡Pon a prueba tus conocimientos!</h2>
+        <p>
+            Lee cada pregunta y selecciona la respuesta correcta.
+        </p>
+
+        <div class="progreso">
+            <div class="barra" id="barra"></div>
+        </div>
+
+        <strong id="contador">Pregunta 1 de 10</strong>
+    </div>
+
+    <div id="juego"></div>
+
+    <div class="resultado" id="resultado">
+        <div class="emoji" id="emojiResultado">🏆</div>
+        <h2>¡Juego terminado!</h2>
+
+        <p>Tu puntuación fue:</p>
+
+        <div class="puntaje" id="puntajeFinal">
+            0 / 10
+        </div>
+
+        <p id="mensajeFinal"></p>
+
+        <button class="boton" onclick="reiniciar()">
+            🔄 Jugar otra vez
+        </button>
+
+        <br>
+
+        <a class="volver" href="../../index.html">
+            ← Volver al portal
+        </a>
+    </div>
+
+</div>
+
+<footer>
+    💻 Portal de Informática
+</footer>
+
+<script>
+
+const preguntas = [
+
+{
+    pregunta: "¿Cuál de estos dispositivos sirve principalmente para introducir información a la computadora?",
+    opciones: [
+        "🖱️ Ratón",
+        "🖥️ Monitor",
+        "🔊 Bocinas",
+        "🖨️ Impresora"
+    ],
+    correcta: 0
+},
+
+{
+    pregunta: "¿Cuál es un periférico de salida?",
+    opciones: [
+        "⌨️ Teclado",
+        "🖱️ Ratón",
+        "🖥️ Monitor",
+        "🎤 Micrófono"
+    ],
+    correcta: 2
+},
+
+{
+    pregunta: "¿Para qué sirve principalmente el teclado?",
+    opciones: [
+        "Mostrar imágenes",
+        "Introducir letras, números y símbolos",
+        "Imprimir documentos",
+        "Reproducir sonidos"
+    ],
+    correcta: 1
+},
+
+{
+    pregunta: "¿Cuál de estos dispositivos permite escuchar sonidos de la computadora?",
+    opciones: [
+        "🔊 Bocinas",
+        "⌨️ Teclado",
+        "🖱️ Ratón",
+        "📷 Cámara web"
+    ],
+    correcta: 0
+},
+
+{
+    pregunta: "¿Cuál de estos dispositivos permite introducir imágenes o video en la computadora?",
+    opciones: [
+        "🖨️ Impresora",
+        "📷 Cámara web",
+        "🖥️ Monitor",
+        "🔊 Bocinas"
+    ],
+    correcta: 1
+},
+
+{
+    pregunta: "¿Cuál de estos dispositivos puede funcionar como entrada y salida de información?",
+    opciones: [
+        "⌨️ Teclado",
+        "🖨️ Impresora",
+        "🖥️ Pantalla táctil",
+        "🔊 Bocinas"
+    ],
+    correcta: 2
+},
+
+{
+    pregunta: "¿Qué tipo de periférico es el ratón?",
+    opciones: [
+        "De entrada",
+        "De salida",
+        "Mixto",
+        "No es un periférico"
+    ],
+    correcta: 0
+},
+
+{
+    pregunta: "¿Qué tipo de periférico es una impresora?",
+    opciones: [
+        "De entrada",
+        "De salida",
+        "Mixto",
+        "Ninguno"
+    ],
+    correcta: 1
+},
+
+{
+    pregunta: "¿Qué significa que un periférico sea mixto?",
+    opciones: [
+        "Que solamente recibe información",
+        "Que solamente muestra información",
+        "Que puede enviar y recibir información",
+        "Que funciona sin computadora"
+    ],
+    correcta: 2
+},
+
+{
+    pregunta: "¿Cuál de estos grupos contiene solamente periféricos de entrada?",
+    opciones: [
+        "Ratón, teclado y micrófono",
+        "Monitor, bocinas e impresora",
+        "Monitor, teclado y bocinas",
+        "Impresora, monitor y cámara"
+    ],
+    correcta: 0
+}
+
+];
+
+let preguntaActual = 0;
+let puntuacion = 0;
+let respondida = false;
+
+function mostrarPregunta() {
+
+    respondida = false;
+
+    const pregunta = preguntas[preguntaActual];
+
+    document.getElementById("contador").textContent =
+        `Pregunta ${preguntaActual + 1} de ${preguntas.length}`;
+
+    document.getElementById("barra").style.width =
+        `${(preguntaActual / preguntas.length) * 100}%`;
+
+    let html = `
+        <div class="pregunta">
+            <h2>${pregunta.pregunta}</h2>
+            <div class="opciones">
+    `;
+
+    pregunta.opciones.forEach((opcion, indice) => {
+
+        html += `
+            <button class="opcion"
+                onclick="responder(${indice})">
+                ${opcion}
+            </button>
+        `;
+
+    });
+
+    html += `
+            </div>
+            <div class="mensaje" id="mensaje"></div>
+        </div>
+    `;
+
+    document.getElementById("juego").innerHTML = html;
+}
+
+function responder(indice) {
+
+    if (respondida) return;
+
+    respondida = true;
+
+    const pregunta = preguntas[preguntaActual];
+    const botones = document.querySelectorAll(".opcion");
+    const mensaje = document.getElementById("mensaje");
+
+    botones[indice].classList.add(
+        indice === pregunta.correcta ? "correcta" : "incorrecta"
+    );
+
+    if (indice === pregunta.correcta) {
+
+        puntuacion++;
+
+        mensaje.textContent = "✅ ¡Correcto! Muy bien.";
+
+    } else {
+
+        botones[pregunta.correcta].classList.add("correcta");
+
+        mensaje.textContent =
+            "❌ No es correcto. Observa cuál era la respuesta correcta.";
+
+    }
+
+    setTimeout(() => {
+
+        preguntaActual++;
+
+        if (preguntaActual < preguntas.length) {
+
+            mostrarPregunta();
+
+        } else {
+
+            terminarJuego();
+
+        }
+
+    }, 1400);
+}
+
+function terminarJuego() {
+
+    document.getElementById("juego").style.display = "none";
+    document.querySelector(".info").style.display = "none";
+
+    document.getElementById("resultado").style.display = "block";
+
+    document.getElementById("puntajeFinal").textContent =
+        `${puntuacion} / ${preguntas.length}`;
+
+    let emoji = "💪";
+    let mensaje = "¡Sigue practicando!";
+
+    if (puntuacion >= 9) {
+        emoji = "🏆";
+        mensaje = "¡Excelente! Dominas los periféricos.";
+    } else if (puntuacion >= 7) {
+        emoji = "🌟";
+        mensaje = "¡Muy bien! Ya conoces muchos periféricos.";
+    } else if (puntuacion >= 5) {
+        emoji = "👍";
+        mensaje = "¡Buen trabajo! Puedes seguir practicando.";
+    }
+
+    document.getElementById("emojiResultado").textContent = emoji;
+    document.getElementById("mensajeFinal").textContent = mensaje;
+
+}
+
+function reiniciar() {
+
+    preguntaActual = 0;
+    puntuacion = 0;
+
+    document.getElementById("resultado").style.display = "none";
+    document.getElementById("juego").style.display = "block";
+    document.querySelector(".info").style.display = "block";
+
+    mostrarPregunta();
+}
+
+mostrarPregunta();
+
+</script>
+
+</body>
+</html>
