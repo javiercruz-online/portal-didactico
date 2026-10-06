@@ -3,26 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal de Informática</title>
+<title>Portal de Informática | Aprende jugando</title>
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 <header class="hero">
-  <div class="badge">💻 PORTAL DE INFORMÁTICA</div>
-  <h1>Aprende jugando</h1>
-  <p>Selecciona tu nivel y encuentra las actividades disponibles.</p>
+  <div class="topbar">
+    <div class="brand">💻 Portal de Informática</div>
+    <a class="teacher-link" href="profesor.html">⚙️ Modo profesor</a>
+  </div>
+  <div class="hero-content">
+    <span class="badge">APRENDE JUGANDO</span>
+    <h1>Misiones y actividades de Informática</h1>
+    <p>Selecciona tu grado, busca una actividad y empieza a practicar.</p>
+  </div>
 </header>
 
 <main class="contenedor">
-  <section>
-    <h2>¿Qué nivel quieres practicar?</h2>
-    <div id="niveles" class="grid"></div>
+  <section id="inicio">
+    <div class="section-title">
+      <div><span class="eyebrow">CATÁLOGO</span><h2>¿Qué grado quieres practicar?</h2></div>
+      <div class="stats-mini">
+        <span id="totalJuegos">0 actividades</span>
+        <span id="totalDisponibles">0 disponibles</span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input id="buscador" type="search" placeholder="🔎 Buscar por nombre, tema o categoría..." autocomplete="off">
+      <select id="filtroCategoria"><option value="todas">Todas las categorías</option></select>
+      <select id="filtroEstado">
+        <option value="todos">Todos</option>
+        <option value="disponibles">Disponibles</option>
+        <option value="nuevos">Nuevos</option>
+        <option value="destacados">Destacados</option>
+      </select>
+    </div>
+
+    <div id="niveles" class="grid niveles"></div>
+    <div id="sinResultados" class="empty hidden">
+      <div>🔎</div><h3>No encontramos actividades</h3><p>Prueba con otra palabra o cambia los filtros.</p>
+    </div>
   </section>
 
-  <section id="juegos" class="oculto">
+  <section id="juegos" class="hidden">
     <div class="encabezado-seccion">
-      <button id="volver" class="btn secundario">← Cambiar nivel</button>
-      <h2 id="tituloNivel"></h2>
+      <button id="volver" class="btn secundario">← Cambiar grado</button>
+      <div><span class="eyebrow">ACTIVIDADES</span><h2 id="tituloNivel"></h2></div>
     </div>
     <div id="listaJuegos" class="grid juegos"></div>
   </section>
