@@ -1,66 +1,10 @@
-const niveles = document.getElementById("niveles");
-const juegos = document.getElementById("juegos");
-const listaJuegos = document.getElementById("listaJuegos");
-const tituloNivel = document.getElementById("tituloNivel");
-const volver = document.getElementById("volver");
-
-function renderNiveles(){
-  niveles.innerHTML = "";
-  PORTAL.niveles.forEach(nivel => {
-    const card = document.createElement("article");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="icono">${nivel.icono}</div>
-      <h3>${nivel.nombre}</h3>
-      <p>${nivel.descripcion}</p>
-      <button class="btn primario" onclick="mostrarJuegos('${nivel.id}')">Ver actividades</button>
-    `;
-    niveles.appendChild(card);
-  });
-}
-
-function mostrarJuegos(id){
-  const nivel = PORTAL.niveles.find(n => n.id === id);
-  if(!nivel) return;
-
-  tituloNivel.textContent = nivel.nombre;
-  listaJuegos.innerHTML = "";
-
-  const disponibles = nivel.juegos.filter(j => j.disponible);
-
-  if(disponibles.length === 0){
-    listaJuegos.innerHTML = `
-      <article class="card">
-        <div class="icono">📚</div>
-        <h3>Próximamente</h3>
-        <p>En este momento no hay actividades disponibles para este nivel.</p>
-      </article>`;
-  } else {
-    disponibles.forEach(juego => {
-      const card = document.createElement("article");
-      card.className = "card juego";
-      card.innerHTML = `
-        <div>
-          <div class="icono">${juego.icono}</div>
-          <h3>${juego.nombre}</h3>
-          <p>${juego.descripcion}</p>
-          <div class="estado">● ACTIVIDAD DISPONIBLE</div>
-        </div>
-        <a class="btn primario" href="${juego.archivo}">▶ Jugar</a>
-      `;
-      listaJuegos.appendChild(card);
-    });
-  }
-
-  document.querySelector("section").classList.add("oculto");
-  juegos.classList.remove("oculto");
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-
-volver.addEventListener("click", () => {
-  juegos.classList.add("oculto");
-  document.querySelector("section").classList.remove("oculto");
-  window.scrollTo({top:0, behavior:"smooth"});
-});
-
-renderNiveles();
+const nivelesEl=document.getElementById("niveles"),juegosEl=document.getElementById("listaJuegos"),seccionJuegos=document.getElementById("juegos"),inicio=document.getElementById("inicio"),tituloNivel=document.getElementById("tituloNivel"),buscador=document.getElementById("buscador"),filtroCategoria=document.getElementById("filtroCategoria"),filtroEstado=document.getElementById("filtroEstado"),sinResultados=document.getElementById("sinResultados");
+function todosLosJuegos(){return PORTAL.niveles.flatMap(n=>n.juegos.map(j=>({...j,nivelId:n.id,nivel:n.nombre})));}
+function esc(t){return String(t).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function cumple(j){const q=(buscador.value||"").toLowerCase().trim(),texto=[j.nombre,j.descripcion,j.categoria,j.nivel].join(" ").toLowerCase();if(q&&!texto.includes(q))return false;if(filtroCategoria.value!="todas"&&j.categoria!==filtroCategoria.value)return false;if(filtroEstado.value=="disponibles"&&!j.disponible)return false;if(filtroEstado.value=="nuevos"&&!j.nuevo)return false;if(filtroEstado.value=="destacados"&&!j.destacado)return false;return true;}
+function stats(){const a=todosLosJuegos(),d=a.filter(j=>j.disponible);document.getElementById("totalJuegos").textContent=`${a.length} actividades`;document.getElementById("totalDisponibles").textContent=`${d.length} disponibles`;}
+function categorias(){PORTAL.categorias.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;filtroCategoria.appendChild(o);});}
+function render(){nivelesEl.innerHTML="";const filtered=buscador.value||filtroCategoria.value!="todas"||filtroEstado.value!="todos";PORTAL.niveles.forEach(n=>{const js=n.juegos.filter(cumple);if(filtered&&!js.length)return;const d=n.juegos.filter(j=>j.disponible).length;const b=document.createElement("button");b.className="nivel-card";b.innerHTML=`<span class="nivel-icon">${n.icono}</span><span class="nivel-info"><strong>${esc(n.nombre)}</strong><small>${esc(n.descripcion)}</small></span><span class="nivel-count">${d} ${d==1?"actividad":"actividades"} <b>→</b></span>`;b.onclick=()=>mostrar(n.id);nivelesEl.appendChild(b);});sinResultados.classList.toggle("hidden",nivelesEl.children.length>0);}
+function mostrar(id){const n=PORTAL.niveles.find(x=>x.id===id);if(!n)return;inicio.classList.add("hidden");seccionJuegos.classList.remove("hidden");tituloNivel.textContent=n.nombre;juegosEl.innerHTML="";const js=n.juegos.filter(j=>j.disponible);if(!js.length){juegosEl.innerHTML='<div class="empty"><div>🚧</div><h3>Próximamente</h3><p>Estamos preparando actividades para este grado.</p></div>';return;}js.forEach(j=>{const a=document.createElement("a");a.className="juego-card";a.href=j.archivo;a.innerHTML=`<div class="juego-icon">${j.icono||"🎯"}</div><div class="juego-body"><div class="tags">${j.nuevo?'<span class="tag nuevo">NUEVO</span>':""}${j.destacado?'<span class="tag destacado">DESTACADO</span>':""}<span class="tag categoria">${esc(j.categoria||"Otros")}</span></div><h3>${esc(j.nombre)}</h3><p>${esc(j.descripcion)}</p><span class="abrir">Comenzar actividad →</span></div>`;juegosEl.appendChild(a);});}
+document.getElementById("volver").onclick=()=>{seccionJuegos.classList.add("hidden");inicio.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});};
+[buscador,filtroCategoria,filtroEstado].forEach(x=>x.addEventListener("input",render));categorias();stats();render();
