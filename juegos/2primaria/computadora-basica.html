@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Detectives de la computadora</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#eef5f9;color:#183b56}.wrap{max-width:850px;margin:auto;padding:25px}.top{background:#183b56;color:white;border-radius:20px;padding:25px;text-align:center}.tablero{background:white;border-radius:20px;padding:25px;margin-top:20px;box-shadow:0 8px 25px #0001}.opciones{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}.opciones button{padding:16px;border:2px solid #dce7ee;background:#fff;border-radius:12px;font-size:1rem;cursor:pointer}.opciones button:hover{background:#f0f7fb}.feedback{text-align:center;font-size:1.2rem;font-weight:bold;min-height:32px;margin:18px}.barra{height:12px;background:#dde7ed;border-radius:10px;overflow:hidden}.progreso{height:100%;width:0;background:#2c78a4;transition:.3s}.resultado{text-align:center;font-size:1.5rem}.reiniciar{display:none;margin:15px auto;padding:12px 20px;border:0;border-radius:12px;background:#2c78a4;color:white;font-weight:bold;cursor:pointer}.imagen{font-size:6rem;text-align:center;margin:10px}.salir{display:inline-block;color:white;text-decoration:none;margin-top:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>🕵️ Detectives de la computadora</h1>
+    <p>Lee la pista y elige la parte correcta.</p>
+    <a class="salir" href="../../index.html">← Volver al portal</a>
+  </div>
+  <div class="tablero">
+    <div class="barra"><div id="progreso" class="progreso"></div></div>
+    <p id="contador"></p>
+    <div id="imagen" class="imagen"></div>
+    <h2 id="pregunta"></h2>
+    <div id="opciones" class="opciones"></div>
+    <div id="feedback" class="feedback"></div>
+    <div id="resultado" class="resultado"></div>
+    <button id="reiniciar" class="reiniciar" onclick="iniciar()">Jugar otra vez</button>
+  </div>
+</div>
+<script>
+const preguntas=[
+ {icon:"🖥️",p:"Muestra imágenes, textos y videos.",r:"Monitor",o:["Monitor","Teclado","Gabinete","Ratón"]},
+ {icon:"🖱️",p:"Sirve para mover el puntero y hacer clic.",r:"Ratón",o:["Teclado","Ratón","Monitor","Gabinete"]},
+ {icon:"⌨️",p:"Tiene teclas que usamos para escribir.",r:"Teclado",o:["Monitor","Gabinete","Teclado","Ratón"]},
+ {icon:"🖥️",p:"Guarda y contiene componentes importantes de la computadora.",r:"Gabinete",o:["Ratón","Gabinete","Teclado","Monitor"]},
+ {icon:"🖱️",p:"¿Cuál de estos sirve para hacer clic?",r:"Ratón",o:["Monitor","Ratón","Gabinete","Teclado"]}
+];
+let actual=0,puntos=0,bloqueado=false;
+function iniciar(){actual=0;puntos=0;bloqueado=false;document.getElementById("resultado").textContent="";document.getElementById("reiniciar").style.display="none";mostrar();}
+function mostrar(){
+ const q=preguntas[actual];
+ document.getElementById("contador").textContent=`Pregunta ${actual+1} de ${preguntas.length}`;
+ document.getElementById("progreso").style.width=`${actual/preguntas.length*100}%`;
+ document.getElementById("imagen").textContent=q.icon;
+ document.getElementById("pregunta").textContent=q.p;
+ document.getElementById("feedback").textContent="";
+ const box=document.getElementById("opciones");box.innerHTML="";
+ [...q.o].sort(()=>Math.random()-.5).forEach(x=>{
+   const b=document.createElement("button");b.textContent=x;b.onclick=()=>responder(x);box.appendChild(b);
+ });
+}
+function responder(x){
+ if(bloqueado)return;bloqueado=true;
+ const correcto=x===preguntas[actual].r;
+ if(correcto){puntos++;document.getElementById("feedback").textContent="✅ ¡Correcto!";}else document.getElementById("feedback").textContent=`❌ La respuesta correcta es ${preguntas[actual].r}.`;
+ setTimeout(()=>{actual++;bloqueado=false;if(actual<preguntas.length)mostrar();else terminar();},900);
+}
+function terminar(){
+ document.getElementById("progreso").style.width="100%";
+ document.getElementById("opciones").innerHTML="";
+ document.getElementById("pregunta").textContent="¡Reto terminado!";
+ document.getElementById("imagen").textContent="🏆";
+ document.getElementById("contador").textContent="";
+ document.getElementById("resultado").innerHTML=`Obtuviste <strong>${puntos} de ${preguntas.length}</strong> respuestas correctas.`;
+ document.getElementById("reiniciar").style.display="block";
+}
+iniciar();
+</script>
+</body>
+</html>
