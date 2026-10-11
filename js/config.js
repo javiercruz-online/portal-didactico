@@ -1,3 +1,4 @@
+
 /* CONFIGURACIÓN DEL PORTAL
 disponible: true = visible para alumnos / false = oculto
 nuevo: true = etiqueta NUEVO / destacado: true = etiqueta DESTACADO */
@@ -16,7 +17,19 @@ const PORTAL = {
     {id:"5primaria",nombre:"5.º Primaria",icono:"💡",descripcion:"Informática y herramientas digitales.",juegos:[]},
     {id:"6primaria",nombre:"6.º Primaria",icono:"🏆",descripcion:"Retos y proyectos de computación.",juegos:[]},
     {id:"1secundaria",nombre:"1.º Secundaria",icono:"💻",descripcion:"Informática y herramientas digitales.",juegos:[]},
-    {id:"2secundaria",nombre:"2.º Secundaria",icono:"📊",descripcion:"Datos, Excel y resolución de problemas.",juegos:[]},
+    {id:"2secundaria",nombre:"2.º Secundaria",icono:"📊",descripcion:"Datos, Excel y resolución de problemas.",juegos:[
+      {
+        id:"mini-tycoon-excel",
+        nombre:"Mini Tycoon: Excel Edition",
+        descripcion:"Resuelve misiones de una tienda utilizando fórmulas de Excel.",
+        icono:"🎮",
+        archivo:"juegos/2secundaria/mini-tycoon-excel.html",
+        categoria:"Excel",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
+    ]},
     {id:"3secundaria",nombre:"3.º Secundaria",icono:"🤖",descripcion:"Programación, IA y proyectos digitales.",juegos:[]}
   ]
 };
