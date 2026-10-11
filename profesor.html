@@ -112,15 +112,28 @@
       }))
     );
 
+
     async function contador(ruta) {
-      const url = base + "/counter/" + encodeURIComponent(ruta) + ".json";
+      // Mantiene las barras de la ruta para consultar el contador correcto.
+      const limpia = ruta.startsWith("/") ? ruta : "/" + ruta;
+      const url = base + "/counter/" + limpia + ".json";
+    
       const respuesta = await fetch(url, { cache: "no-store" });
-      if (!respuesta.ok) throw new Error("Contador no disponible");
+    
+      if (!respuesta.ok) {
+        throw new Error("Contador no disponible: " + respuesta.status);
+      }
+    
       const datos = await respuesta.json();
       const valor = Number(String(datos.count || "0").replace(/,/g, ""));
-      if (!Number.isFinite(valor)) throw new Error("Contador no válido");
+    
+      if (!Number.isFinite(valor)) {
+        throw new Error("Contador no válido");
+      }
+    
       return valor;
     }
+
 
     function crearFila(j, maximo) {
       const fila = document.createElement("div");
