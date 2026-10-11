@@ -108,7 +108,7 @@
         ...j,
         nivelId: n.id,
         nivel: n.nombre,
-        ruta: "/" + j.archivo.split("/").map(encodeURIComponent).join("/")
+        ruta: "/portal-didactico/" + j.archivo.replace(/^\/+/, "")
       }))
     );
 
