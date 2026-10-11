@@ -46,6 +46,6 @@ function finish(){const score=Math.max(0,Math.round(50*(completed.length/6)+25*(
 function restart(){level=0;cash=0;rep=0;completed=[];hintsUsed=0;wrong=0;discountStage=0;vatStage=0;finalStage=0;personalizeProblems();$('formula').disabled=false;$('checkBtn').disabled=false;$('checkBtn').style.opacity='1';$('modal').classList.remove('open');$('customer').style.filter='';$('storeSign').textContent='¡MINI MART! ★';$('speech').textContent='¡Hola, gerente! Vamos a convertir esta tiendita en el negocio más famoso del barrio.';render()}
 $('checkBtn').addEventListener('click',check);$('nextBtn').addEventListener('click',advance);$('formula').addEventListener('keydown',e=>{if(e.key==='Enter')check()});$('hintBtn').addEventListener('click',hint);$('talkBtn').addEventListener('click',talk);$('guide').addEventListener('click',talk);$('guide').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')talk()});$('customer').addEventListener('click',()=>$('speech').textContent=missions[level].speech);$('restartBtn').addEventListener('click',()=>{if(confirm('¿Reiniciar la partida desde cero? Se perderá el progreso de esta sesión.'))restart()});$('playAgain').addEventListener('click',restart);render()})();
 </script>
-<script src="../../js/estadisticas.js"></script>
+
 </body>
 </html>
