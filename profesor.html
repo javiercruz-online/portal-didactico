@@ -1,1 +1,236 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Modo profesor</title><link rel="stylesheet" href="css/estilos.css"></head><body><header class="hero"><div class="topbar"><div class="brand">⚙️ Modo profesor</div><a class="teacher-link" href="index.html">← Volver al portal</a></div><div class="hero-content"><span class="badge">ADMINISTRACIÓN</span><h1>Control del portal</h1><p>Consulta el catálogo y prepara rápidamente la configuración de tus actividades.</p></div></header><main class="contenedor"><section class="adminbox"><h2>Actividades actuales</h2><p class="muted">GitHub Pages es un sitio estático. Este panel no modifica GitHub automáticamente. Para que todos los alumnos vean un cambio, edita <code>js/config.js</code> y guarda el cambio en GitHub.</p><div id="adminLista"></div><h2 style="margin-top:30px">Plantilla para agregar un juego</h2><pre id="plantilla" class="codebox"></pre><button class="btn copiar" onclick="copiarPlantilla()">📋 Copiar plantilla</button><p id="copiado" class="muted"></p></section></main><footer>Modo profesor · Portal de Informática</footer><script src="js/config.js"></script><script>const lista=document.getElementById("adminLista");PORTAL.niveles.forEach(n=>{const d=document.createElement("div");d.className="adminrow";d.innerHTML="<strong>"+n.icono+" "+n.nombre+"</strong><span>"+n.juegos.length+" juego(s) configurado(s)</span>";lista.appendChild(d);n.juegos.forEach(j=>{const r=document.createElement("div");r.className="adminsub";r.innerHTML=(j.disponible?"🟢":"🔴")+" "+j.nombre+" · "+(j.categoria||"Otros")+" · "+(j.disponible?"Visible":"Oculto");lista.appendChild(r)})});const plantilla=`{ id:"id-del-juego", nombre:"Nombre del juego", descripcion:"Descripción breve", icono:"🎯", archivo:"juegos/GRADO/archivo.html", categoria:"Periféricos", disponible:true, nuevo:true, destacado:false }`;document.getElementById("plantilla").textContent=plantilla;function copiarPlantilla(){navigator.clipboard.writeText(plantilla);document.getElementById("copiado").textContent="Plantilla copiada.";setTimeout(()=>document.getElementById("copiado").textContent="",1800)}</script><style>.adminbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:25px;box-shadow:0 8px 24px #1d27400b}.muted{color:var(--muted)}code{background:#f1f2f6;padding:2px 6px;border-radius:5px}.adminrow{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line)}.adminsub{padding:9px 10px 9px 22px;color:var(--muted);border-bottom:1px solid #f0f1f5}.codebox{background:#151827;color:#f4f5fb;padding:18px;border-radius:14px;overflow:auto}.copiar{background:var(--p);color:#fff;margin-top:8px}</style></body></html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detrás del juego</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    .dashboard { max-width: 1100px; margin: auto; padding: 28px 18px 50px; }
+    .intro, .metric, .panel {
+      background: var(--card, #fff);
+      border: 1px solid var(--line, #e5e7eb);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 6px 20px #18233a0b;
+    }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 14px; margin: 18px 0; }
+    .metric small { color: var(--muted, #687084); display: block; }
+    .metric strong { display: block; font-size: 2rem; margin-top: 8px; }
+    .panel { margin-top: 18px; }
+    .panel h2 { margin-top: 0; }
+    .game-row { padding: 15px 0; border-bottom: 1px solid var(--line,#e5e7eb); }
+    .game-row:last-child { border-bottom: 0; }
+    .game-top { display:flex; justify-content:space-between; gap:12px; align-items:center; }
+    .bar-bg { height: 9px; background:#eef0f6; border-radius:99px; overflow:hidden; margin-top:10px; }
+    .bar { height:100%; width:0; background:var(--p,#6558d3); border-radius:99px; }
+    .muted { color:var(--muted,#687084); }
+    .pill { display:inline-block; padding:5px 9px; border-radius:99px; background:#f0edff; color:#5141b3; font-size:.8rem; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .actions a, .actions button { cursor:pointer; border:0; border-radius:10px; padding:10px 14px; text-decoration:none; }
+    .primary { background:var(--p,#6558d3); color:white; }
+    .secondary { background:#eef0f6; color:#24283a; }
+    .empty { padding:18px 0; color:var(--muted,#687084); }
+    @media(max-width:520px) { .game-top { align-items:flex-start; flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="topbar">
+      <div class="brand">🎮 Detrás del juego</div>
+      <a class="teacher-link" href="index.html">← Volver al portal</a>
+    </div>
+    <div class="hero-content">
+      <span class="badge">LO QUE MÁS NOS INSPIRA</span>
+      <h1>Detrás del juego</h1>
+      <p>Descubre qué actividades despiertan curiosidad y cuáles podrían inspirar nuevos retos.</p>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="intro">
+      <h2>Las preferencias de nuestra comunidad</h2>
+      <p class="muted">Las cifras se consultan desde GoatCounter. Solo se mostrarán datos disponibles para las actividades que tienen instalado el seguimiento.</p>
+      <div class="actions">
+        <button class="primary" id="actualizar">↻ Actualizar estadísticas</button>
+        <a class="secondary" href="https://javiercruz-didactico.goatcounter.com/" target="_blank" rel="noopener">Abrir panel de estadísticas ↗</a>
+      </div>
+      <p id="estado" class="muted" role="status">Consultando contadores…</p>
+    </section>
+
+    <section class="metrics">
+      <div class="metric">
+        <small>Visitas registradas en juegos</small>
+        <strong id="totalVisitas">—</strong>
+      </div>
+      <div class="metric">
+        <small>Actividades consultadas</small>
+        <strong id="totalJuegos">—</strong>
+      </div>
+      <div class="metric">
+        <small>Actividad más visitada</small>
+        <strong id="lider" style="font-size:1.1rem">—</strong>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>🏆 Actividades más visitadas</h2>
+      <p class="muted">Ranking por visitas registradas. Puede tardar en actualizarse porque los contadores públicos se almacenan en caché.</p>
+      <div id="ranking" class="empty">Cargando datos…</div>
+    </section>
+
+    <section class="panel">
+      <h2>💡 Ideas para crear nuevos juegos</h2>
+      <div id="ideas" class="empty">Las sugerencias aparecerán cuando haya datos disponibles.</div>
+    </section>
+
+    <section class="panel">
+      <h2>⏱️ Tiempo activo estimado</h2>
+      <p class="muted">El tiempo se estima con eventos de 30 segundos registrados por el archivo de seguimiento. No mide la atención real y puede no estar disponible en todos los juegos.</p>
+      <div id="tiempos" class="empty">Consultando eventos de tiempo…</div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script>
+  (() => {
+    "use strict";
+
+    const base = "https://javiercruz-didactico.goatcounter.com";
+    const rankingEl = document.getElementById("ranking");
+    const tiemposEl = document.getElementById("tiempos");
+    const ideasEl = document.getElementById("ideas");
+    const estadoEl = document.getElementById("estado");
+
+    const juegos = PORTAL.niveles.flatMap(n =>
+      n.juegos.filter(j => j.disponible).map(j => ({
+        ...j,
+        nivelId: n.id,
+        nivel: n.nombre,
+        ruta: "/" + j.archivo.split("/").map(encodeURIComponent).join("/")
+      }))
+    );
+
+    async function contador(ruta) {
+      const url = base + "/counter/" + encodeURIComponent(ruta) + ".json";
+      const respuesta = await fetch(url, { cache: "no-store" });
+      if (!respuesta.ok) throw new Error("Contador no disponible");
+      const datos = await respuesta.json();
+      const valor = Number(String(datos.count || "0").replace(/,/g, ""));
+      if (!Number.isFinite(valor)) throw new Error("Contador no válido");
+      return valor;
+    }
+
+    function crearFila(j, maximo) {
+      const fila = document.createElement("div");
+      fila.className = "game-row";
+      const top = document.createElement("div");
+      top.className = "game-top";
+
+      const info = document.createElement("div");
+      const nombre = document.createElement("strong");
+      nombre.textContent = (j.icono || "🎯") + " " + j.nombre;
+      const detalle = document.createElement("div");
+      detalle.className = "muted";
+      detalle.textContent = j.nivel + " · " + (j.categoria || "Otros");
+      info.append(nombre, detalle);
+
+      const numero = document.createElement("span");
+      numero.className = "pill";
+      numero.textContent = j.error ? "Sin datos" : j.visitas.toLocaleString("es-MX") + " visitas";
+      top.append(info, numero);
+      fila.append(top);
+
+      const fondo = document.createElement("div");
+      fondo.className = "bar-bg";
+      const barra = document.createElement("div");
+      barra.className = "bar";
+      barra.style.width = (maximo > 0 && !j.error ? Math.max(2, j.visitas / maximo * 100) : 0) + "%";
+      fondo.append(barra);
+      fila.append(fondo);
+      return fila;
+    }
+
+    async function cargar() {
+      estadoEl.textContent = "Consultando GoatCounter…";
+      document.getElementById("actualizar").disabled = true;
+      rankingEl.textContent = "Cargando datos…";
+      tiemposEl.textContent = "Consultando eventos…";
+
+      const resultados = await Promise.all(juegos.map(async j => {
+        try {
+          j.visitas = await contador(j.ruta);
+          j.error = false;
+        } catch {
+          j.visitas = 0;
+          j.error = true;
+        }
+        try {
+          const evento = "tiempo-30s-" +
+            j.archivo.split("/").slice(-2).join("-").replace(/\.html$/i, "")
+              .replace(/[^a-zA-Z0-9_-]/g, "-").toLowerCase();
+          j.bloquesTiempo = await contador(evento);
+        } catch {
+          j.bloquesTiempo = null;
+        }
+        return j;
+      }));
+
+      const conDatos = resultados.filter(j => !j.error);
+      const ordenados = [...resultados].sort((a,b) => b.visitas - a.visitas);
+      const total = conDatos.reduce((s,j) => s + j.visitas, 0);
+      document.getElementById("totalVisitas").textContent =
+        conDatos.length ? total.toLocaleString("es-MX") : "—";
+      document.getElementById("totalJuegos").textContent =
+        conDatos.length + " / " + juegos.length;
+      document.getElementById("lider").textContent =
+        ordenados.length && conDatos.length && ordenados[0].visitas > 0
+          ? ordenados[0].nombre : "Aún sin datos";
+
+      rankingEl.replaceChildren();
+      if (!conDatos.length) {
+        rankingEl.textContent = "No se pudieron consultar los contadores. Comprueba que los contadores públicos estén activados y que GoatCounter tenga datos para estas rutas.";
+      } else {
+        ordenados.forEach(j => rankingEl.appendChild(crearFila(j, ordenados[0].visitas)));
+      }
+
+      const tiemposValidos = resultados.filter(j => j.bloquesTiempo !== null);
+      tiemposEl.replaceChildren();
+      if (!tiemposValidos.length) {
+        tiemposEl.textContent = "Todavía no hay eventos de tiempo consultables. Las visitas sí pueden mostrarse aunque estos eventos no estén disponibles.";
+      } else {
+        tiemposValidos.sort((a,b) => b.bloquesTiempo - a.bloquesTiempo);
+        tiemposValidos.forEach(j => {
+          const fila = document.createElement("p");
+          fila.textContent = j.nombre + ": " +
+            Math.round(j.bloquesTiempo * 0.5) + " minutos estimados";
+          tiemposEl.appendChild(fila);
+        });
+      }
+
+      ideasEl.replaceChildren();
+      if (!conDatos.length || total === 0) {
+        ideasEl.textContent = "Cuando haya visitas registradas podremos identificar las actividades con mayor interés y proponer nuevos retos relacionados.";
+      } else {
+        const popular = ordenados.filter(j => !j.error && j.visitas > 0).slice(0,3);
+        const texto = document.createElement("p");
+        texto.textContent = "Temas que vale la pena observar según las visitas actuales: " +
+          popular.map(j => j.categoria || "Otros").filter((v,i,a) => a.indexOf(v) === i).join(", ") +
+          ". Conviene crear variantes de los juegos populares y comparar sus resultados con el tiempo.";
+        ideasEl.appendChild(texto);
+      }
+
+      const sinDatos = resultados.filter(j => j.error).length;
+      estadoEl.textContent = sinDatos
+        ? "Consulta terminada. " + sinDatos + " actividad(es) aún no tienen un contador disponible."
+        : "Estadísticas consultadas. GoatCounter puede tardar varias horas en reflejar visitas recientes.";
+      document.getElementById("actualizar").disabled = false;
+    }
+
+    document.getElementById("actualizar").addEventListener("click", cargar);
+    cargar();
+  })();
+  </script>
+</body>
+</html>
