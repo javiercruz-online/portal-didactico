@@ -17,7 +17,7 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
-      }
+      },
       {
         id:"rompecabezas-computadora",
         nombre:"RompeCompu",
