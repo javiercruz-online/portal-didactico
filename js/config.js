@@ -11,8 +11,19 @@ const PORTAL = {
         id:"busqueda-computadora",
         nombre:"Búsqueda de la computadora",
         descripcion:"Voltea las cartas y encuentra la pieza escondida",
-        icono:"🎮",
+        icono:"🖥️",
         archivo:"juegos/1primaria/busqueda-computadora.html",
+        categoria:"Computadora",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
+      {
+        id:"rompecabezas-computadora",
+        nombre:"RompeCompu",
+        descripcion:"¡Arma cada rompecabezas y descubre todas las partes!",
+        icono:"🖥️",
+        archivo:"juegos/1primaria/rompecabezas-computadora.html",
         categoria:"Computadora",
         disponible:true,
         nuevo:true,
