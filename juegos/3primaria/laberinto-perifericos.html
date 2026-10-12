@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pixel Laberinto — Periféricos de computadora</title>
+<style>
+:root{--bg:#f4f9ff;--panel:#ffffff;--ink:#24324a;--cyan:#37a7d8;--pink:#ff8b6a;--yellow:#ffd65a;--green:#3caa72;--wall:#5486d8;--floor:#eaf4ff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#e8f7ff,#fff5df 55%,#f1eaff);color:var(--ink);font-family:system-ui,Arial,sans-serif;min-height:100vh;padding:10px}button{font:inherit;touch-action:manipulation}.wrap{max-width:1100px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.logo{font-family:monospace;font-weight:1000;letter-spacing:2px;font-size:clamp(20px,4vw,34px);color:#f08b35;text-shadow:2px 2px 0 #ffd65a}.logo small{display:block;font:700 11px system-ui;letter-spacing:3px;color:var(--cyan);text-shadow:none;margin-top:4px}.score{border:3px solid var(--cyan);background:#fff;padding:9px 14px;font-family:monospace;font-size:18px;box-shadow:3px 3px 0 #c6d8ec}.question{background:var(--panel);border:3px solid var(--pink);border-radius:14px;box-shadow:4px 4px 0 #d8e5f3;padding:10px 14px;margin-bottom:10px}.label{font:900 11px monospace;letter-spacing:2px;color:var(--cyan);margin-bottom:5px}.qtext{font-size:clamp(18px,3vw,25px);font-weight:850;line-height:1.25}.layout{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:10px;align-items:start}.gamebox{background:#ffffff;border:4px solid var(--cyan);border-radius:14px;padding:6px;box-shadow:4px 4px 0 #c6d8ec;min-width:0}canvas{display:block;width:100%;height:auto;max-width:672px;max-height:none;aspect-ratio:7/5;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;background:var(--floor);touch-action:none;margin-inline:auto}.side{display:grid;gap:12px}.card{background:var(--panel);border:3px solid #a6bce8;border-radius:12px;padding:10px;box-shadow:3px 3px 0 #d8e5f3}.card h3{margin:0 0 8px;font:900 12px monospace;letter-spacing:1.5px;color:var(--yellow)}.card p{margin:5px 0;font-size:13px;line-height:1.45}.key{display:inline-block;border:2px solid var(--cyan);padding:1px 6px;margin:2px;color:white;font-family:monospace}.status{min-height:24px;color:var(--green);font-weight:800;font-size:14px;margin-top:8px}.answer-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:7px 0}.answer-item{display:flex;align-items:center;gap:7px;padding:5px 7px;border:2px solid #c5d7ee;border-radius:8px;background:#f6fbff;font-size:12px;font-weight:800;min-width:0}.answer-item .num{display:inline-grid;place-items:center;flex:0 0 23px;height:23px;border-radius:6px;background:#ffe39a;color:#24324a;font-family:monospace}.controls{display:none;grid-template-columns:repeat(3,58px);grid-template-rows:repeat(2,48px);gap:5px;justify-content:center;margin:12px auto 4px}.controls button,.action{border:2px solid var(--cyan);background:#e4f5ff;color:#24324a;font-size:22px;font-weight:900;box-shadow:3px 3px 0 #c6d8ec;border-radius:10px}.controls button:active,.action:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #08071a}.controls .up{grid-column:2}.controls .left{grid-column:1;grid-row:2}.controls .down{grid-column:2;grid-row:2}.controls .right{grid-column:3;grid-row:2}.action{font-size:14px;padding:9px 12px;letter-spacing:.5px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.foot{text-align:center;color:#aaa5e7;font:11px monospace;margin:14px 0 4px}.pixel{color:var(--pink)}
+@media(max-width:760px){body{padding:6px}.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.gamebox{padding:4px}.controls{display:grid}.qtext{font-size:18px}.score{font-size:15px;padding:7px 10px}.card{padding:8px}.card p{font-size:12px}.answer-item{font-size:11px;padding:4px}.answer-item .num{flex-basis:21px;height:21px}}
+@media(max-width:420px){.side{grid-template-columns:1fr 1fr}.logo small{font-size:9px}.question{padding:8px}.controls{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,42px);gap:4px;margin:7px auto 2px}.controls button{min-height:42px;font-size:19px}.actions{margin-top:6px}.action{font-size:12px;padding:7px 8px}.foot{margin:5px 0 2px}.answer-list{gap:4px;margin:5px 0}.answer-item{font-size:10px;gap:4px;padding:3px}.answer-item .num{flex-basis:18px;height:18px;font-size:10px}}
+
+/* Ajuste estricto al alto visible: toda la interfaz cabe sin scroll de página */
+html{height:100%;}
+body{height:100vh;height:100dvh;min-height:0;overflow:hidden;padding:clamp(4px,1vh,10px);}
+.wrap{height:100%;max-height:100%;display:flex;flex-direction:column;min-height:0;}
+.top{flex:0 0 auto;margin-bottom:clamp(4px,1vh,10px);gap:6px;}
+.logo{font-size:clamp(17px,3vh,30px);line-height:1;}
+.logo small{font-size:clamp(8px,1.35vh,11px);margin-top:2px;letter-spacing:1.5px;}
+.score{padding:5px 9px;font-size:clamp(13px,2vh,18px);}
+.question{flex:0 0 auto;margin-bottom:clamp(4px,1vh,10px);padding:clamp(5px,1vh,10px) clamp(8px,1.4vw,14px);}
+.label{margin-bottom:2px;font-size:10px;}
+.qtext{font-size:clamp(15px,2.6vh,24px);line-height:1.15;}
+.status{min-height:0;margin-top:3px;font-size:clamp(11px,1.7vh,14px);line-height:1.15;}
+.layout{flex:1 1 auto;min-height:0;grid-template-columns:minmax(0,1fr) minmax(175px,230px);gap:8px;align-items:stretch;}
+.gamebox{min-height:0;display:flex;flex-direction:column;gap:4px;padding:4px;overflow:hidden;}
+canvas{flex:1 1 auto;min-height:0;width:auto;height:100%;max-width:100%;max-height:100%;aspect-ratio:7/5;object-fit:contain;}
+.answer-list{flex:0 0 auto;margin:2px 0;gap:3px;}
+.answer-item{padding:3px 5px;font-size:clamp(9px,1.5vh,12px);line-height:1.05;}
+.answer-item .num{flex-basis:19px;height:19px;}
+.controls{flex:0 0 auto;margin:2px auto;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,30px);gap:3px;}
+.controls button{font-size:17px;min-height:0;padding:0;}
+.actions{flex:0 0 auto;margin-top:2px;gap:5px;}
+.action{font-size:clamp(10px,1.5vh,13px);padding:5px 7px;}
+.side{min-height:0;gap:6px;grid-template-rows:1fr 1fr;}
+.card{padding:7px;overflow:hidden;}
+.card h3{margin-bottom:4px;font-size:10px;}
+.card p{font-size:clamp(10px,1.5vh,12px);line-height:1.25;margin:4px 0;}
+.key{padding:0 4px;}
+.foot{display:none;}
+@media(max-width:760px){
+  .layout{grid-template-columns:minmax(0,1fr);}
+  .side{display:none;}
+  .gamebox{width:100%;}
+  canvas{width:100%;height:auto;flex:1 1 auto;min-height:0;}
+  .controls{display:grid;grid-template-columns:repeat(3,clamp(34px,7vw,44px));grid-template-rows:repeat(2,clamp(26px,4.5vh,34px));}
+  .controls button{font-size:16px;}
+  .answer-item{font-size:clamp(9px,1.45vh,11px);}
+}
+@media(max-height:620px){
+  .top{margin-bottom:3px;}
+  .question{margin-bottom:3px;padding:4px 8px;}
+  .qtext{font-size:clamp(14px,2.4vh,18px);}
+  .status{font-size:10px;}
+  .answer-item{padding:2px 4px;}
+  .answer-item .num{height:16px;flex-basis:16px;}
+  .controls{grid-template-rows:repeat(2,24px);margin:1px auto;}
+  .actions{margin-top:1px;}
+  .action{padding:3px 5px;}
+}
+@media(max-width:380px){
+  body{padding:3px;}
+  .logo{font-size:16px;letter-spacing:1px;}
+  .score{font-size:12px;padding:4px 6px;}
+  .question{padding:5px 7px;}
+  .answer-item{font-size:9px;gap:3px;}
+  .action{font-size:9px;padding:4px 5px;}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top"><div class="logo">PIXEL LABERINTO <small>PERIFÉRICOS · EDICIÓN 198X</small></div><div class="score">ACIERTOS: <span id="score">00</span></div></header>
+<section class="question"><div class="label">◆ MISIÓN ACTUAL</div><div class="qtext" id="question">¡Prepárate! Presiona una flecha para comenzar.</div><div class="status" id="status" aria-live="polite">Encuentra el periférico correcto.</div></section>
+<div class="layout"><main class="gamebox"><canvas id="game" width="672" height="480" aria-label="Laberinto de periféricos"></canvas><div id="answerList" class="answer-list" aria-label="Opciones de periféricos"></div><div class="controls" aria-label="Controles táctiles"><button class="up" data-dir="up" aria-label="Arriba">▲</button><button class="left" data-dir="left" aria-label="Izquierda">◀</button><button class="down" data-dir="down" aria-label="Abajo">▼</button><button class="right" data-dir="right" aria-label="Derecha">▶</button></div><div class="actions"><button class="action" id="pause">⏸ PAUSAR (ESPACIO)</button><button class="action" id="restart">↻ REINICIAR POSICIÓN</button></div></main>
+<aside class="side"><section class="card"><h3>▸ CÓMO JUGAR</h3><p>Ayuda al pequeño explorador a llegar al periférico que responde la pregunta.</p><p><b>Computadora:</b> pulsa una flecha del teclado por cada casilla que quieras avanzar.</p><p><b>Celular o tableta:</b> toca las flechas en pantalla.</p><p>Cada vez que pulses una flecha, avanzarás una sola casilla.</p><p><span class="key">ESPACIO</span> Pausar / reanudar.</p></section><section class="card"><h3>▸ EN EL LABERINTO</h3><p>Hay cuatro periféricos. Lee la pregunta y elige el camino correcto.</p><p>Los periféricos y sus posiciones cambian en cada misión. Ninguna opción tiene pistas de color.</p><p class="pixel">¡Piensa, explora y encuentra la salida!</p></section></aside></div><div class="foot">★ MODO AVENTURA · PIXEL ART · 1 JUGADOR ★</div></div>
+<script>
+(()=>{
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),scoreEl=document.getElementById('score'),questionEl=document.getElementById('question'),statusEl=document.getElementById('status'),pauseBtn=document.getElementById('pause'),answerList=document.getElementById('answerList');
+const W=21,H=15,T=32;let maze=[],player={x:1,y:1},terminals=[],choices=[],target=null,score=0,started=false,paused=false,wonLock=false,dir={x:0,y:0},nextDir={x:0,y:0},lastStep=0,stepMs=135,anim=0;
+const devices=[
+{name:'Teclado',type:'entrada',desc:'¿Qué periférico permite escribir letras, números y palabras?'},
+{name:'Ratón',type:'entrada',desc:'¿Qué periférico mueves sobre una superficie para controlar el puntero?'},
+{name:'Micrófono',type:'entrada',desc:'¿Qué periférico sirve para introducir la voz o sonidos a la computadora?'},
+{name:'Cámara web',type:'entrada',desc:'¿Qué periférico captura imágenes o video para enviarlos a la computadora?'},
+{name:'Memoria USB',type:'entrada',desc:'¿Qué dispositivo permite introducir archivos guardados y llevarlos de una computadora a otra?'},
+{name:'Monitor',type:'salida',desc:'¿Qué periférico muestra imágenes y texto de la computadora en una pantalla?'},
+{name:'Bocinas',type:'salida',desc:'¿Qué periférico permite escuchar sonidos de la computadora en voz alta?'},
+{name:'Audífonos',type:'salida',desc:'¿Qué periférico permite escuchar el sonido de forma personal, sin usar bocinas?'},
+{name:'Impresora',type:'salida',desc:'¿Qué periférico imprime documentos e imágenes en papel?'},
+{name:'Proyector',type:'salida',desc:'¿Qué periférico muestra la imagen de la computadora en una pared o pantalla grande?'},
+{name:'Pantalla táctil',type:'mixto',desc:'¿Qué periférico permite ver información y tocar la pantalla para dar instrucciones?'},
+{name:'Auriculares con micrófono',type:'mixto',desc:'¿Qué periférico permite escuchar y también hablar por un micrófono integrado?'},
+{name:'Control de videojuego',type:'entrada',desc:'¿Qué periférico permite controlar los movimientos y acciones en un videojuego?'}
+];
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function generateMaze(){maze=Array.from({length:H},()=>Array(W).fill(1));let stack=[[1,1]];maze[1][1]=0;while(stack.length){let [x,y]=stack[stack.length-1],opts=shuffle([[x+2,y],[x-2,y],[x,y+2],[x,y-2]]).filter(([nx,ny])=>nx>0&&ny>0&&nx<W-1&&ny<H-1&&maze[ny][nx]===1);if(!opts.length){stack.pop();continue}let [nx,ny]=opts[0];maze[(y+ny)/2][(x+nx)/2]=0;maze[ny][nx]=0;stack.push([nx,ny])} // carve a few extra links for easier exploration
+for(let i=0;i<18;i++){let x=1+Math.floor(Math.random()*(W-2)),y=1+Math.floor(Math.random()*(H-2));if(maze[y][x]===1&&((maze[y][x-1]===0&&maze[y][x+1]===0)||(maze[y-1][x]===0&&maze[y+1][x]===0)))maze[y][x]=0}
+}
+function distances(sx,sy){let d=Array.from({length:H},()=>Array(W).fill(-1)),q=[[sx,sy]];d[sy][sx]=0;for(let i=0;i<q.length;i++){let [x,y]=q[i];for(let [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){let nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<W&&ny<H&&maze[ny][nx]===0&&d[ny][nx]<0){d[ny][nx]=d[y][x]+1;q.push([nx,ny])}}}return d}
+function newRound(){generateMaze();player={x:1,y:1};dir={x:0,y:0};nextDir={x:0,y:0};started=false;paused=false;wonLock=false;target=null;let d=distances(1,1),cells=[];for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++)if(maze[y][x]===0&&d[y][x]>8)cells.push({x,y,dist:d[y][x]});cells.sort((a,b)=>b.dist-a.dist);let picks=[];for(const c of shuffle(cells)){if(picks.every(p=>Math.abs(p.x-c.x)+Math.abs(p.y-c.y)>4))picks.push(c);if(picks.length===4)break}if(picks.length<4)picks=shuffle(cells).slice(0,4);terminals=picks.map((p,i)=>({...p,id:i}));let correct=devices[Math.floor(Math.random()*devices.length)];let pool=shuffle(devices.filter(d=>d.name!==correct.name)).slice(0,3);choices=shuffle([correct,...pool]);target=correct.name;terminals.forEach((t,i)=>t.device=choices[i]);answerList.innerHTML=terminals.map((t,i)=>`<div class="answer-item"><span class="num">${i+1}</span><span>${t.device.name}</span></div>`).join('');questionEl.textContent=correct.desc;statusEl.textContent='Lee la pregunta y encuentra el periférico correcto.';pauseBtn.textContent='⏸ PAUSAR (ESPACIO)';draw()}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#eaf4ff';ctx.fillRect(0,0,canvas.width,canvas.height);for(let y=0;y<H;y++)for(let x=0;x<W;x++){let px=x*T,py=y*T;if(maze[y][x]){ctx.fillStyle='#34308b';ctx.fillRect(px,py,T,T);ctx.fillStyle='#5148bb';ctx.fillRect(px+3,py+3,T-6,4);ctx.fillStyle='#24205f';ctx.fillRect(px+3,py+9,4,T-12)}else{ctx.fillStyle=(x+y)%2?'#f4faff':'#e5f2ff';ctx.fillRect(px,py,T,T);ctx.fillStyle='#d2e7fa';ctx.fillRect(px+3,py+3,2,2)}}
+// Start tile
+ctx.fillStyle='#a9e8b2';ctx.fillRect(T+7,T+7,T-14,T-14);ctx.fillStyle='#24324a';ctx.font='bold 13px monospace';ctx.textAlign='center';ctx.fillText('IN',T+16,T+20);
+// answer stations: same colors/shapes to avoid hints
+terminals.forEach((t,i)=>{let x=t.x*T,y=t.y*T;ctx.fillStyle='#fffdf4';ctx.fillRect(x+2,y+2,T-4,T-4);ctx.strokeStyle='#e49a4b';ctx.lineWidth=2;ctx.strokeRect(x+4,y+4,T-8,T-8);ctx.fillStyle='#ffe39a';ctx.fillRect(x+8,y+8,T-16,T-16);ctx.fillStyle='#24324a';ctx.font='bold 15px monospace';ctx.textAlign='center';ctx.fillText(String(i+1),x+T/2,y+22);});
+// player retro explorer sprite
+let cx=player.x*T+T/2,cy=player.y*T+T/2;ctx.fillStyle='#ffcf55';ctx.fillRect(cx-8,cy-10,16,20);ctx.fillStyle='#f08b65';ctx.fillRect(cx-5,cy-13,10,5);ctx.fillStyle='#24324a';ctx.fillRect(cx-4,cy-5,3,3);ctx.fillRect(cx+2,cy-5,3,3);ctx.fillStyle='#47f5e7';ctx.fillRect(cx-5,cy+5,10,3);
+if(!started&&!paused&&!wonLock){ctx.fillStyle='rgba(5,4,20,.74)';ctx.fillRect(0,canvas.height/2-28,canvas.width,56);ctx.fillStyle='#f08b35';ctx.font='bold 18px monospace';ctx.textAlign='center';ctx.fillText('PULSA UNA FLECHA PARA COMENZAR',canvas.width/2,canvas.height/2+6)}if(paused){ctx.fillStyle='rgba(5,4,20,.78)';ctx.fillRect(0,canvas.height/2-30,canvas.width,60);ctx.fillStyle='#278cb9';ctx.font='bold 26px monospace';ctx.textAlign='center';ctx.fillText('PAUSA',canvas.width/2,canvas.height/2+9)}}
+function wrapName(s,max){let words=s.split(' '),out=[],line='';for(let w of words){if((line+' '+w).trim().length>max){out.push(line);line=w}else line=(line+' '+w).trim()}if(line)out.push(line);return out}
+function setDirection(name){const dirs={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};if(!dirs[name]||paused||wonLock)return;const [dx,dy]=dirs[name];if(!started){started=true;statusEl.textContent='¡Vamos! Cada flecha mueve una casilla.'}const nx=player.x+dx,ny=player.y+dy;if(maze[ny]?.[nx]===0){player.x=nx;player.y=ny;dir={x:dx,y:dy};checkTerminal()}draw()}
+function checkTerminal(){const t=terminals.find(t=>t.x===player.x&&t.y===player.y);if(!t)return;if(t.device.name===target){score++;scoreEl.textContent=String(score).padStart(2,'0');wonLock=true;started=false;statusEl.textContent='¡Correcto! ¡Muy bien! Preparando otra misión…';draw();setTimeout(newRound,900)}else{statusEl.textContent='Ese no es. ¡Prueba otro camino!';terminals=terminals.filter(z=>z!==t);draw()}}
+window.addEventListener('keydown',e=>{let map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};if(map[e.key]){e.preventDefault();if(!e.repeat)setDirection(map[e.key])}if(e.code==='Space'){e.preventDefault();togglePause()}});document.querySelectorAll('[data-dir]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();setDirection(b.dataset.dir)})});function togglePause(){if(wonLock)return;if(!started&&!paused){statusEl.textContent='Presiona una flecha para comenzar.';return}paused=!paused;pauseBtn.textContent=paused?'▶ REANUDAR (ESPACIO)':'⏸ PAUSAR (ESPACIO)';statusEl.textContent=paused?'Juego en pausa.':'¡Continúa buscando la respuesta!';draw()}pauseBtn.addEventListener('click',togglePause);document.getElementById('restart').addEventListener('click',()=>{player={x:1,y:1};dir={x:0,y:0};nextDir={x:0,y:0};started=false;paused=false;wonLock=false;pauseBtn.textContent='⏸ PAUSAR (ESPACIO)';statusEl.textContent='Posición reiniciada. Pulsa una flecha para comenzar.';draw()});
+newRound();
+})();
+</script></body></html>
