@@ -3,10 +3,22 @@
 disponible: true = visible para alumnos / false = oculto
 nuevo: true = etiqueta NUEVO / destacado: true = etiqueta DESTACADO */
 const PORTAL = {
-  categorias:["Periféricos","Hardware","Software","Word","Excel","PowerPoint","Internet","Programación","IA","Otros"],
+  categorias:["Computadora","Periféricos","Hardware","Software","Word","Excel","PowerPoint","Internet","Programación","IA","Otros"],
   niveles:[
     {id:"preescolar",nombre:"Preescolar",icono:"🧸",descripcion:"Actividades para aprender jugando.",juegos:[]},
-    {id:"1primaria",nombre:"1.º Primaria",icono:"🌟",descripcion:"Primeras habilidades de computación.",juegos:[]},
+    {id:"1primaria",nombre:"1.º Primaria",icono:"🌟",descripcion:"Primeras habilidades de computación.",juegos:[
+      {
+        id:"busqueda-computadora",
+        nombre:"Búsqueda de la computadora",
+        descripcion:"Voltea las cartas y encuentra la pieza escondida",
+        icono:"🎮",
+        archivo:"juegos/1primaria/busqueda-computadora.html",
+        categoria:"Computadora",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
+    ]},
     {id:"2primaria",nombre:"2.º Primaria",icono:"🖥️",descripcion:"Partes y uso básico de la computadora.",juegos:[
       {id:"computadora-basica",nombre:"Monitor, ratón, teclado y gabinete",descripcion:"Reconoce las partes principales de una computadora.",icono:"🖥️",archivo:"juegos/2primaria/computadora-basica.html",categoria:"Hardware",disponible:true,nuevo:false,destacado:true}
     ]},
