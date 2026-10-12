@@ -33,8 +33,32 @@ const PORTAL = {
     {id:"2primaria",nombre:"2.º Primaria",icono:"🖥️",descripcion:"Partes y uso básico de la computadora.",juegos:[
       {id:"computadora-basica",nombre:"Monitor, ratón, teclado y gabinete",descripcion:"Reconoce las partes principales de una computadora.",icono:"🖥️",archivo:"juegos/2primaria/computadora-basica.html",categoria:"Hardware",disponible:true,nuevo:false,destacado:true}
     ]},
-    {id:"3primaria",nombre:"3.º Primaria",icono:"🎮",descripcion:"Periféricos y actividades interactivas.",juegos:[
-      {id:"perifericos-entrada-salida-mixtos",nombre:"Periféricos: entrada, salida y mixtos",descripcion:"Clasifica diferentes periféricos según su función.",icono:"🖥️",archivo:"juegos/3primaria/perifericos-entrada-salida-mixtos.html",categoria:"Periféricos",disponible:true,nuevo:true,destacado:true}
+    {id:"3primaria",nombre:"3.º Primaria",
+     icono:"🎮",
+     descripcion:"Periféricos y actividades interactivas.",
+     juegos:[
+      {
+        id:"perifericos-entrada-salida-mixtos",
+        nombre:"Periféricos: entrada, salida y mixtos",
+        descripcion:"Clasifica diferentes periféricos según su función.",
+        icono:"🖥️",
+        archivo:"juegos/3primaria/perifericos-entrada-salida-mixtos.html",
+        categoria:"Periféricos",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      },
+      {
+        id:"laberinto-perifericos",
+        nombre:"Pixel Perifericos - Laberinto",
+        descripcion:"Ayuda al pequeño explorador a llegar al periférico que responde la pregunta.",
+        icono:"🖥️",
+        archivo:"juegos/3primaria/laberinto-perifericos.html",
+        categoria:"Periféricos",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
     ]},
     {id:"4primaria",nombre:"4.º Primaria",icono:"🚀",descripcion:"Herramientas digitales y productividad.",juegos:[]},
     {id:"5primaria",nombre:"5.º Primaria",icono:"💡",descripcion:"Informática y herramientas digitales.",juegos:[]},
