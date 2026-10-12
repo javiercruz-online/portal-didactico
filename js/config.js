@@ -53,6 +53,18 @@ const PORTAL = {
         destacado:true
       }
     ]},
-    {id:"3secundaria",nombre:"3.º Secundaria",icono:"🤖",descripcion:"Programación, IA y proyectos digitales.",juegos:[]}
+    {id:"3secundaria",nombre:"3.º Secundaria",icono:"🤖",descripcion:"Programación, IA y proyectos digitales.",juegos:[
+      {
+        id:"laberinto-diagramas-flujo",
+        nombre:"FlowMaze",
+        descripcion:"Lleva a Pac-Man a la respuesta correcta sobre las formas de los diagramas de flujo.",
+        icono:"🎮",
+        archivo:"juegos/3secundaria/laberinto-diagramas-flujo.html",
+        categoria:"Programación",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
+    ]}
   ]
 };
