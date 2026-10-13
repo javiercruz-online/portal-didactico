@@ -99,6 +99,17 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
+      },
+      {
+        id:"Flow Race 3D",
+        nombre:"FlowRace",
+        descripcion:"Busca la forma correcta durante la carrera y evita los obstáculos.",
+        icono:"🎮",
+        archivo:"juegos/3secundaria/flow-race.html",
+        categoria:"Programación",
+        disponible:true,
+        nuevo:true,
+        destacado:true
       }
     ]}
   ]
