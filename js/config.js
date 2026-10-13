@@ -110,6 +110,17 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
+      },
+      {
+        id:"Multitud de Ideas",
+        nombre:"Multitud De Ideas",
+        descripcion:"Acierta a la respuesta y duplica tu múltitud",
+        icono:"🎮",
+        archivo:"juegos/3secundaria/carrera-multitudes-diagramas.html",
+        categoria:"Programación",
+        disponible:true,
+        nuevo:true,
+        destacado:true
       }
     ]}
   ]
