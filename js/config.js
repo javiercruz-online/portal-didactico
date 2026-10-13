@@ -3,7 +3,7 @@
 disponible: true = visible para alumnos / false = oculto
 nuevo: true = etiqueta NUEVO / destacado: true = etiqueta DESTACADO */
 const PORTAL = {
-  categorias:["Computadora","Periféricos","Hardware","Software","Word","Excel","PowerPoint","Internet","Programación","IA","Otros"],
+  categorias:["Computadora","Periféricos","Hardware","Extensiones","Software","Word","Excel","PowerPoint","Internet","Programación","IA","Otros"],
   niveles:[
     {id:"preescolar",nombre:"Preescolar",icono:"🧸",descripcion:"Actividades para aprender jugando.",juegos:[]},
     {id:"1primaria",nombre:"1.º Primaria",icono:"🌟",descripcion:"Primeras habilidades de computación.",juegos:[
@@ -60,7 +60,19 @@ const PORTAL = {
         destacado:true
       }
     ]},
-    {id:"4primaria",nombre:"4.º Primaria",icono:"🚀",descripcion:"Herramientas digitales y productividad.",juegos:[]},
+    {id:"4primaria",nombre:"4.º Primaria",icono:"🚀",descripcion:"Herramientas digitales y productividad.",juegos:[
+      {
+        id:"mision extensiones",
+        nombre:"Misión Extensiones",
+        descripcion:"Lee la pista y elige la extensión correcta.",
+        icono:"🖥️",
+        archivo:"juegos/4primaria/mision-extensiones.html",
+        categoria:"Extensiones",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
+    ]},
     {id:"5primaria",nombre:"5.º Primaria",icono:"💡",descripcion:"Informática y herramientas digitales.",juegos:[]},
     {id:"6primaria",nombre:"6.º Primaria",icono:"🏆",descripcion:"Retos y proyectos de computación.",juegos:[]},
     {id:"1secundaria",nombre:"1.º Secundaria",icono:"💻",descripcion:"Informática y herramientas digitales.",juegos:[]},
