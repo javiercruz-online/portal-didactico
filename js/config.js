@@ -101,8 +101,8 @@ const PORTAL = {
         destacado:true
       },
       {
-        id:"Flow Race 3D",
-        nombre:"FlowRace",
+        id:"Flow Racer 3D",
+        nombre:"FlowRacer3D ",
         descripcion:"Busca la forma correcta durante la carrera y evita los obstáculos.",
         icono:"🎮",
         archivo:"juegos/3secundaria/flow-race.html",
