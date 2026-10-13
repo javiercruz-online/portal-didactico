@@ -61,7 +61,7 @@ const PORTAL = {
       }
     ]},
     {id:"4primaria",nombre:"4.º Primaria",icono:"🚀",descripcion:"Herramientas digitales y productividad.",juegos:[
-      {
+/*      {
         id:"mision extensiones",
         nombre:"Misión Extensiones",
         descripcion:"Lee la pista y elige la extensión correcta.",
@@ -71,9 +71,21 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
+      }*/
+    ]},
+    {id:"5primaria",nombre:"5.º Primaria",icono:"💡",descripcion:"Informática y herramientas digitales.",juegos:[
+     {
+        id:"mision extensiones",
+        nombre:"Misión Extensiones",
+        descripcion:"Lee la pista y elige la extensión correcta.",
+        icono:"🖥️",
+        archivo:"juegos/5primaria/mision-extensiones.html",
+        categoria:"Extensiones",
+        disponible:true,
+        nuevo:true,
+        destacado:true
       }
     ]},
-    {id:"5primaria",nombre:"5.º Primaria",icono:"💡",descripcion:"Informática y herramientas digitales.",juegos:[]},
     {id:"6primaria",nombre:"6.º Primaria",icono:"🏆",descripcion:"Retos y proyectos de computación.",juegos:[]},
     {id:"1secundaria",nombre:"1.º Secundaria",icono:"💻",descripcion:"Informática y herramientas digitales.",juegos:[]},
     {id:"2secundaria",nombre:"2.º Secundaria",icono:"📊",descripcion:"Datos, Excel y resolución de problemas.",juegos:[
