@@ -88,6 +88,17 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
+      },
+      {
+        id:"space-invaders-flujo",
+        nombre:"FlowInvaders",
+        descripcion:"Una invasión de símbolos amenaza tu diagrama. Muévete con las flechas izquierda y derecha y dispara a la respuesta correcta.",
+        icono:"🎮",
+        archivo:"juegos/3secundaria/space-invaders-flujo.html",
+        categoria:"Programación",
+        disponible:true,
+        nuevo:true,
+        destacado:true
       }
     ]}
   ]
