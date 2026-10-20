@@ -61,17 +61,17 @@ const PORTAL = {
       }
     ]},
     {id:"4primaria",nombre:"4.º Primaria",icono:"🚀",descripcion:"Herramientas digitales y productividad.",juegos:[
-/*      {
-        id:"mision extensiones",
-        nombre:"Misión Extensiones",
-        descripcion:"Lee la pista y elige la extensión correcta.",
+      {
+        id:"Rana Exploradora",
+        nombre:"Rana Exploradora",
+        descripcion:"Lee la pregunta y elige la respuesta correcta.",
         icono:"🖥️",
-        archivo:"juegos/4primaria/mision-extensiones.html",
+        archivo:"juegos/4primaria/rana-exploradora.html",
         categoria:"Extensiones",
         disponible:true,
         nuevo:true,
         destacado:true
-      }*/
+      }
     ]},
     {id:"5primaria",nombre:"5.º Primaria",icono:"💡",descripcion:"Informática y herramientas digitales.",juegos:[
      {
