@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Flow Waves — Diagramas de flujo</title>
+<style>
+:root{--bg:#171018;--panel:#281a27;--cyan:#ffbd59;--pink:#b9ff66;--purple:#9d5de0;--yellow:#fff0a6;--white:#fff4df;--muted:#c5adbd}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+body{background:radial-gradient(ellipse at 50% 0%,#48233f 0%,#171018 68%)}
+#app{height:100%;display:flex;flex-direction:column;max-width:1400px;margin:auto;padding:10px;gap:8px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 8px;flex-wrap:wrap}
+.brand{font-weight:1000;font-size:clamp(20px,3vw,32px);letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 12px #ffbd5966}
+.brand span{color:var(--cyan)}.sub{font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:3px}
+.hud{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.stat{border:1px solid #383d70;background:#11152de8;padding:7px 12px;border-radius:9px;min-width:82px;text-align:center;box-shadow:inset 0 0 12px #202454}
+.stat small{display:block;font-size:9px;letter-spacing:1.4px;color:var(--muted)}.stat strong{font-size:18px;color:var(--cyan)}
+#stage{position:relative;flex:1;min-height:0;border:1px solid #77516b;border-radius:13px;overflow:hidden;box-shadow:0 0 25px #b94c8d20,inset 0 0 35px #351a31;background:#171018}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+#tip{position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:clamp(11px,1.5vw,14px);font-weight:bold;letter-spacing:.6px;color:#fff4df;background:#2b1a2be8;border:1px solid #ffbd5966;border-radius:8px;padding:8px 14px;text-align:center;max-width:90%;box-shadow:0 0 16px #ffbd5922;pointer-events:none}
+#edu{position:absolute;bottom:12px;left:12px;max-width:min(390px,70%);padding:10px 13px;background:#2b1a2be8;border:1px solid #b9ff6666;border-radius:9px;font-size:12px;color:#e8eaff;pointer-events:none}
+#edu b{color:var(--pink);letter-spacing:1px;font-size:10px;display:block;margin-bottom:4px}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:0 3px}
+.help{color:var(--muted);font-size:12px;line-height:1.5}.buttons{display:flex;gap:7px;flex-wrap:wrap}
+button{font-weight:800;color:var(--white);background:#302034;border:1px solid #79536e;border-radius:8px;padding:9px 12px;cursor:pointer;letter-spacing:.4px}
+button:hover{border-color:var(--cyan);box-shadow:0 0 12px #ffbd5925}button:focus-visible{outline:2px solid var(--yellow)}
+#startscreen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#171018e8;backdrop-filter:blur(5px);padding:18px;z-index:4}
+.modal{width:min(510px,100%);text-align:center;padding:clamp(18px,4vw,34px);border:1px solid #ffbd5980;border-radius:16px;background:linear-gradient(145deg,#43223d,#201522);box-shadow:0 0 45px #b94c8d35}
+.modal h1{font-size:clamp(28px,6vw,48px);line-height:1;margin:0 0 10px;letter-spacing:2px;text-shadow:0 0 18px #ffbd5966}.modal h1 span{color:var(--cyan)}
+.modal p{color:#c9cfee;line-height:1.55;font-size:14px}.key{display:inline-block;padding:4px 8px;border:1px solid #6068a3;border-radius:5px;color:var(--yellow);font-weight:bold;margin:2px}
+.primary{background:linear-gradient(90deg,#a64b71,#7042a1);border-color:#ffbd59;padding:12px 25px;font-size:15px;box-shadow:0 0 18px #ffbd592a}
+#message{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#070817b9;z-index:3;padding:15px}
+#message .modal{max-width:430px}
+@media(max-width:600px){#app{padding:5px;gap:5px}.stat{min-width:65px;padding:5px 7px}.stat strong{font-size:15px}.stat small{font-size:8px}header{padding:3px}.sub{font-size:10px}.controls{align-items:flex-start}.help{max-width:100%;font-size:11px}button{padding:8px 9px;font-size:11px}#edu{font-size:10px;max-width:75%;bottom:7px;left:7px;padding:7px 9px}#tip{top:7px}}
+</style></head>
+<body><div id="app">
+<header><div><div class="brand"><span>FLOW</span> WAVES</div><div class="sub">ARCADE RETRO · DIAGRAMAS DE FLUJO · 3.º SECUNDARIA</div></div>
+<div class="hud"><div class="stat"><small>DISTANCIA</small><strong id="score">0000</strong></div><div class="stat"><small>RÉCORD</small><strong id="best">0000</strong></div><div class="stat"><small>RITMO</small><strong id="spd">1.0×</strong></div></div></header>
+<div id="stage"><canvas id="game"></canvas><div id="tip">MANTÉN ESPACIO / ↑ / CLIC PARA SUBIR · SUELTA PARA BAJAR</div><div id="edu"><b>💠 DATO DE FLUJOGRAMAS</b><span id="fact">Los símbolos representan acciones y decisiones de un algoritmo.</span></div>
+<div id="startscreen"><div class="modal"><h1><span>FLOW</span> WAVES</h1><p>Surca un túnel arcade retro de tonos ciruela, ámbar y lima. Mantén pulsado para subir y suelta para bajar. Además de esquivar, recoge portales de práctica: identifica símbolos reales de diagramas de flujo para ganar puntos extra. ¡La velocidad aumenta a medida que avanzas!</p><p><span class="key">ESPACIO</span><span class="key">W</span><span class="key">↑</span><span class="key">CLIC / TOCAR</span> subir mientras mantienes</p><button class="primary" id="start">INICIAR MISIÓN ▶</button></div></div>
+<div id="quiz" style="display:none;position:absolute;inset:0;z-index:5;align-items:center;justify-content:center;background:#171018dd;padding:16px"><div class="modal" style="max-width:560px"><div style="color:#b9ff66;font-weight:900;letter-spacing:2px">PUNTO DE CONTROL · FLUJOGRAMAS</div><h2 id="quiztitle">¿QUÉ SÍMBOLO ES?</h2><div id="quizshape" style="height:86px;display:flex;align-items:center;justify-content:center;margin:8px auto"></div><p id="quizprompt">Selecciona el nombre correcto para el símbolo.</p><div id="quizanswers" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px"></div><p id="quizfeedback" aria-live="polite"></p><button id="quizcontinue" class="primary" style="display:none">CONTINUAR ▶</button></div></div><div id="message"><div class="modal"><h1 id="endtitle">¡CHOQUE!</h1><p id="endtext">Distancia recorrida: 0</p><button class="primary" id="again">VOLVER A INTENTAR ↻</button></div></div></div>
+<div class="controls"><div class="help">CONTROL: mantener = subir · soltar = descender · <b>P</b> = pausa · <b>R</b> = reiniciar<br>Esquiva obstáculos y toca los portales verdes para responder preguntas. Un choque termina la carrera.</div><div class="buttons"><button id="pause">Ⅱ PAUSA</button></div></div></div>
+<script>
+(()=>{
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),stage=document.getElementById('stage');
+const $=id=>document.getElementById(id);
+let W=900,H=500,dpr=1,playing=false,paused=false,dead=false,holding=false,score=0,best=0,baseSpeed=1,worldSpeed=8.0,frame=0,spawn=0,obstacles=[],particles=[],stars=[],soundOn=true,audio=null,lastTime=0;
+try{best=+(localStorage.getItem('flowWavesBest')||0)}catch(e){} $('best').textContent=String(best).padStart(4,'0');
+const facts=[
+'INICIO / FIN: óvalo o rectángulo redondeado que marca el comienzo o término.',
+'PROCESO: rectángulo para una operación, cálculo o instrucción.',
+'DECISIÓN: rombo que permite elegir una ruta, por ejemplo Sí o No.',
+'ENTRADA / SALIDA: paralelogramo para leer datos o mostrar resultados.',
+'FLECHAS: indican la dirección y el orden de los pasos del algoritmo.',
+'Un diagrama debe leerse siguiendo las flechas, sin saltar pasos.',
+'Cada decisión debe conectar con las rutas posibles según su condición.',
+'Un algoritmo es una secuencia ordenada de pasos para resolver un problema.'
+];
+function resize(){const r=stage.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);W=Math.max(320,r.width);H=Math.max(260,r.height);canvas.width=Math.floor(W*dpr);canvas.height=Math.floor(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);stars=Array.from({length:Math.round(W*H/6500)},()=>({x:Math.random()*W,y:Math.random()*H,s:Math.random()*1.8+.3,a:Math.random()*.65+.2}));}
+addEventListener('resize',resize);resize();
+let ship={x:W*.23,y:H*.5,vy:0,angle:0};let nextQuiz=260,quizActive=false,quizQueue=[],quizIndex=0,quizPausedWas=false,checkpoint=null;
+function reset(){score=0;frame=0;spawn=28;obstacles=[];particles=[];nextQuiz=260;quizActive=false;quizQueue=[];checkpoint={x:W*.82,y:H*.5,r:31,hit:false};worldSpeed=8.0;ship={x:W*.23,y:H*.5,vy:0,angle:0};dead=false;paused=false;playing=true;holding=false;$('message').style.display='none';$('quiz').style.display='none';$('startscreen').style.display='none';$('pause').textContent='Ⅱ PAUSA';$('score').textContent='0000';$('spd').textContent=baseSpeed.toFixed(1)+'×';$('fact').textContent=facts[0];lastTime=performance.now();playTone(520,.07);requestAnimationFrame(loop);}
+function playTone(f,d){if(!soundOn)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.04,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}catch(e){}}
+function polygon(points,fill,stroke,sw=2){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=sw;ctx.shadowColor=stroke;ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0}
+function rounded(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.shadowColor=stroke;ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0}
+function spawnObstacle(){let gap=H*(.42-Math.min(score/18000,.15));gap=Math.max(H*.24,gap);let center=H*(.35+Math.random()*.3);let type=Math.random();let x=W+40;
+if(type<.58){let gapY=Math.max(75,Math.min(H-75,center));obstacles.push({type:'gate',x,w:38,gap:gapY,gapH:gap,passed:false,concept:['PROCESO','DECISIÓN','ENTRADA / SALIDA','INICIO / FIN'][Math.floor(Math.random()*4)]});}
+else if(type<.82){obstacles.push({type:'spike',x,w:48,y:Math.random()<.5?0:H-1,up:Math.random()<.5,passed:false});}
+else{obstacles.push({type:'gear',x,y:center,r:Math.max(17,Math.min(25,H*.055)),rot:Math.random()*6,passed:false});}
+}
+function drawBackground(dt){ctx.fillStyle='#171018';ctx.fillRect(0,0,W,H);let grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,'#4b2440');grad.addColorStop(.52,'#211321');grad.addColorStop(1,'#15101b');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+ctx.save();ctx.strokeStyle='#a05b7850';ctx.lineWidth=1;let grid=38,offset=(frame*worldSpeed*.7)%grid;for(let x=-grid-offset;x<W;x+=grid){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=grid){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.restore();
+stars.forEach(s=>{s.x-=worldSpeed*.22*dt/16.7;if(s.x<0)s.x=W;ctx.globalAlpha=s.a;ctx.fillStyle='#ffe3ba';ctx.fillRect(s.x,s.y,s.s,s.s)});ctx.globalAlpha=1;
+ctx.strokeStyle='#ffbd59';ctx.lineWidth=3;ctx.shadowColor='#ffbd59';ctx.shadowBlur=15;ctx.beginPath();ctx.moveTo(0,2);ctx.lineTo(W,2);ctx.moveTo(0,H-2);ctx.lineTo(W,H-2);ctx.stroke();ctx.shadowBlur=0;}
+function drawGate(o){let top=o.gap-o.gapH/2,bottom=o.gap+o.gapH/2;ctx.fillStyle='#42213d';ctx.fillRect(o.x,0,o.w,top);ctx.fillRect(o.x,bottom,o.w,H-bottom);ctx.strokeStyle='#b9ff66';ctx.lineWidth=3;ctx.shadowColor='#b9ff66';ctx.shadowBlur=15;ctx.strokeRect(o.x,0,o.w,top);ctx.strokeRect(o.x,bottom,o.w,H-bottom);ctx.shadowBlur=0;
+let cy=top/2;let by=bottom+(H-bottom)/2;flowSymbol(o.concept,o.x+o.w/2,cy,Math.min(21,o.w*.48),Math.min(12,top*.22));flowSymbol(o.concept,o.x+o.w/2,by,Math.min(21,o.w*.48),Math.min(12,(H-bottom)*.22));}
+function flowSymbol(t,x,y,w,h){ctx.save();ctx.globalAlpha=.92;ctx.strokeStyle='#ffbd59';ctx.fillStyle='#352034';ctx.lineWidth=1.5;ctx.shadowColor='#36f5ff';ctx.shadowBlur=7;
+if(t==='DECISIÓN')polygon([[x,y-h],[x+w,y],[x,y+h],[x-w,y]],'#352034','#ffbd59',1.4);else if(t==='ENTRADA / SALIDA')polygon([[x-w+5,y-h],[x+w,y-h],[x+w-5,y+h],[x-w,y+h]],'#352034','#ffbd59',1.4);else rounded(x-w,y-h,w*2,h*2,5,'#352034','#ffbd59');ctx.restore();}
+function drawSpike(o){let x=o.x,w=o.w;ctx.fillStyle='#b9ff66';ctx.strokeStyle='#fff0a6';ctx.lineWidth=2;ctx.shadowColor='#ff3fd2';ctx.shadowBlur=13;ctx.beginPath();if(o.y===0){ctx.moveTo(x,0);ctx.lineTo(x+w*.5,H*.16);ctx.lineTo(x+w,0)}else{ctx.moveTo(x,H);ctx.lineTo(x+w*.5,H-H*.16);ctx.lineTo(x+w,H)}ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;}
+function drawGear(o){ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot);ctx.strokeStyle='#ffbd59';ctx.fillStyle='#4c2a45';ctx.lineWidth=3;ctx.shadowColor='#efff5a';ctx.shadowBlur=14;for(let i=0;i<10;i++){ctx.rotate(Math.PI/5);ctx.fillRect(-o.r*.25,-o.r*1.35,o.r*.5,o.r*.45)}ctx.beginPath();ctx.arc(0,0,o.r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.beginPath();ctx.arc(0,0,o.r*.35,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.restore();}
+
+function drawCheckpoint(c){
+ if(!c)return;
+ ctx.save();ctx.translate(c.x,c.y);
+ let pulse=1+Math.sin(frame*.12)*.10;
+ ctx.scale(pulse,pulse);
+ ctx.shadowColor='#b9ff66';ctx.shadowBlur=20;
+ ctx.strokeStyle='#b9ff66';ctx.lineWidth=3;ctx.fillStyle='#302034';
+ ctx.beginPath();ctx.arc(0,0,c.r,0,Math.PI*2);ctx.fill();ctx.stroke();
+ ctx.shadowBlur=0;ctx.strokeStyle='#ffbd59';ctx.lineWidth=2;
+ ctx.beginPath();ctx.moveTo(-13,-10);ctx.lineTo(13,0);ctx.lineTo(-13,10);ctx.closePath();ctx.stroke();
+ ctx.fillStyle='#fff4df';ctx.font='bold 10px Arial';ctx.textAlign='center';ctx.fillText('TOCA AQUÍ',0,c.r+17);
+ ctx.restore();
+}
+function drawShip(){ctx.save();ctx.translate(ship.x,ship.y);ctx.rotate(ship.angle);ctx.shadowColor='#ffbd59';ctx.shadowBlur=20;polygon([[-17,-10],[17,0],[-17,10],[-8,0]],'#fff0c2','#ffbd59',2.5);ctx.shadowBlur=0;ctx.strokeStyle='#b9ff66';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-12,0);ctx.lineTo(-25+(Math.random()*5),0);ctx.stroke();ctx.restore();}
+
+const quizItems=[
+ {name:'INICIO / FIN',desc:'Marca dónde comienza o termina un algoritmo.',shape:'round'},
+ {name:'PROCESO',desc:'Representa una instrucción o cálculo.',shape:'rect'},
+ {name:'DECISIÓN',desc:'Plantea una condición con rutas como Sí y No.',shape:'diamond'},
+ {name:'ENTRADA / SALIDA',desc:'Representa datos que se leen o resultados que se muestran.',shape:'para'}
+];
+function makeShape(shape){let el=document.createElementNS('http://www.w3.org/2000/svg','svg');el.setAttribute('viewBox','0 0 220 70');el.setAttribute('width','220');el.setAttribute('height','70');el.style.display='block';el.style.overflow='visible';let n=document.createElementNS('http://www.w3.org/2000/svg',shape==='round'||shape==='rect'?'rect':'polygon');if(shape==='round'){n.setAttribute('x','35');n.setAttribute('y','12');n.setAttribute('width','150');n.setAttribute('height','46');n.setAttribute('rx','22')}else if(shape==='rect'){n.setAttribute('x','35');n.setAttribute('y','12');n.setAttribute('width','150');n.setAttribute('height','46')}else if(shape==='diamond'){n.setAttribute('points','110,4 190,35 110,66 30,35')}else n.setAttribute('points','48,12 190,12 172,58 30,58');n.setAttribute('fill','#352034');n.setAttribute('stroke','#ffbd59');n.setAttribute('stroke-width','3');el.appendChild(n);return el}
+function openQuiz(){if(quizActive||!playing)return;quizActive=true;holding=false;paused=true;quizPausedWas=true;let q=quizItems[Math.floor(Math.random()*quizItems.length)];$('quiztitle').textContent='IDENTIFICA EL SÍMBOLO';$('quizshape').replaceChildren(makeShape(q.shape));$('quizprompt').textContent=q.desc;$('quizfeedback').textContent='';$('quizcontinue').style.display='none';let opts=[q.name];while(opts.length<2){let n=quizItems[Math.floor(Math.random()*quizItems.length)].name;if(!opts.includes(n))opts.push(n)}if(Math.random()<.5)opts.reverse();let wrap=$('quizanswers');wrap.replaceChildren();opts.forEach(opt=>{let b=document.createElement('button');b.textContent=opt;b.style.minHeight='48px';b.style.borderColor='#ffbd59';b.addEventListener('click',()=>{if(!quizActive||b.disabled)return;Array.from(wrap.children).forEach(x=>x.disabled=true);if(opt===q.name){score+=125;$('quizfeedback').textContent='¡Correcto! +125 puntos. '+q.name+' está identificado.';playTone(760,.12)}else{$('quizfeedback').textContent='Casi. La respuesta correcta es '+q.name+'. Recuerda: '+q.desc;score=Math.max(0,score-25);playTone(190,.12)}$('score').textContent=String(Math.floor(score)).padStart(4,'0');$('quizcontinue').style.display='inline-block'});wrap.appendChild(b)});$('quiz').style.display='flex'}
+$('quizcontinue').addEventListener('click',()=>{$('quiz').style.display='none';quizActive=false;paused=false;lastTime=performance.now();checkpoint={x:W+Math.max(150,W*.45),y:H*(.3+Math.random()*.4),r:31,hit:false};requestAnimationFrame(loop)});
+function hit(){if(dead)return;dead=true;playing=false;holding=false;playTone(100,.25);$('endtitle').textContent='¡CHOQUE!';$('endtext').textContent='Distancia recorrida: '+Math.floor(score)+' m. ¡Vuelve a intentarlo y supera tu récord.';$('message').style.display='flex';}
+function collide(o){let x=ship.x,y=ship.y,r=8;if(o.type==='gate'){let top=o.gap-o.gapH/2,bottom=o.gap+o.gapH/2;return x+r>o.x&&x-r<o.x+o.w&&(y-r<top||y+r>bottom)}if(o.type==='spike'){return x+r>o.x&&x-r<o.x+o.w&&(o.y===0?y< H*.16+r:y>H-H*.16-r)}let dx=x-o.x,dy=y-o.y;return Math.hypot(dx,dy)<o.r+r*.85}
+function loop(now){if(!playing)return;requestAnimationFrame(loop);let dt=Math.min(24,now-lastTime||16.7);lastTime=now;if(paused){drawBackground(dt);obstacles.forEach(o=>o.type==='gate'?drawGate(o):o.type==='spike'?drawSpike(o):drawGear(o));drawShip();return}
+frame+=dt/16.7;worldSpeed=Math.min(19,8.0+score/480);score+=worldSpeed*.12*dt/16.7;$('score').textContent=String(Math.floor(score)).padStart(4,'0');$('spd').textContent=(worldSpeed/8.0).toFixed(1)+'×';
+drawBackground(dt);if(checkpoint){checkpoint.x-=worldSpeed*dt/16.7;drawCheckpoint(checkpoint);if(!checkpoint.hit&&Math.hypot(ship.x-checkpoint.x,ship.y-checkpoint.y)<checkpoint.r+12){checkpoint.hit=true;openQuiz();return}if(checkpoint.x<-80){checkpoint={x:W+Math.max(100,W*.35),y:H*(.3+Math.random()*.4),r:31,hit:false};nextQuiz=score+340}}spawn-=dt/16.7;if(spawn<=0){spawnObstacle();spawn=Math.max(26,Math.random()*24+40-score/300);}
+obstacles.forEach(o=>{o.x-=worldSpeed*dt/16.7;if(o.type==='gear')o.rot+=.035*dt/16.7;o.type==='gate'?drawGate(o):o.type==='spike'?drawSpike(o):drawGear(o);if(!o.passed&&o.x+o.w<ship.x){o.passed=true;playTone(660,.025);if(Math.floor(score)%220<worldSpeed*2){$('fact').textContent=facts[Math.floor(score/180)%facts.length]}}if(collide(o)){hit()}});
+obstacles=obstacles.filter(o=>o.x+(o.w||o.r*2)>-30);if(holding)ship.vy-=.34*dt/16.7;else ship.vy+=.27*dt/16.7;ship.vy=Math.max(-5.6,Math.min(5.6,ship.vy));ship.y+=ship.vy*dt/16.7;ship.angle=Math.max(-.65,Math.min(.65,ship.vy*.12));if(ship.y<14||ship.y>H-14)hit();drawShip();
+if(Math.floor(score)>best){best=Math.floor(score);$('best').textContent=String(best).padStart(4,'0');try{localStorage.setItem('flowWavesBest',best)}catch(e){}}
+}
+function togglePause(){if(!playing||quizActive)return;paused=!paused;$('pause').textContent=paused?'▶ CONTINUAR':'Ⅱ PAUSA';if(!paused)lastTime=performance.now();}
+function setHold(v){if(!playing||paused)return;holding=v;}
+$('start').addEventListener('click',reset);$('again').addEventListener('click',reset);$('pause').addEventListener('click',togglePause);
+
+addEventListener('keydown',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code)){e.preventDefault();if(!playing&&!dead&&$('startscreen').style.display!=='none')return;setHold(true)}if(e.code==='KeyP')togglePause();if(e.code==='KeyR')reset();});
+addEventListener('keyup',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code)){e.preventDefault();setHold(false)}});
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture?.(e.pointerId);setHold(true)});addEventListener('pointerup',()=>setHold(false));addEventListener('pointercancel',()=>setHold(false));
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing&&!paused)togglePause()});
+drawBackground(16);drawShip();
+})();
+</script></body></html>
