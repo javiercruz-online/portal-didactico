@@ -145,6 +145,17 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
+      },
+      {
+        id:"Space Waves Flujo",
+        nombre:"Flow Waves",
+        descripcion:"Surca un túnel arcade. Además de esquivar, recoge portales de práctica para ganar puntos extra.",
+        icono:"🎮",
+        archivo:"juegos/3secundaria/space-waves-flujo.html",
+        categoria:"Programación",
+        disponible:true,
+        nuevo:true,
+        destacado:true
       }
     ]}
   ]
