@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🐸 Rana Exploradora</title>
+<style>
+:root{font-family:"Trebuchet MS",sans-serif;color:#173b50}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(#b6f0ff,#d9ffd0);text-align:center}
+header{padding:15px 10px 8px}
+h1{margin:0;color:#16784c;font-size:clamp(27px,5vw,42px);text-shadow:2px 2px white}
+header p{margin:6px}
+.stats{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px}
+.pill{background:white;border:2px solid #a0dfbe;border-radius:20px;padding:8px 14px;font-weight:bold}
+#game{position:relative;max-width:900px;height:390px;margin:10px auto;overflow:hidden;border:5px solid #fff;border-radius:25px;background:linear-gradient(#78ddeb 0%,#30b9d0 45%,#148bb7 100%);box-shadow:0 8px 0 #78c7ad}
+.water{position:absolute;left:-10%;width:120%;height:16px;border-radius:50%;background:#b5f8ff88;animation:flow 4s linear infinite}
+.water:nth-child(1){top:24%;animation-duration:5s}.water:nth-child(2){top:53%;animation-duration:3s}.water:nth-child(3){top:82%;animation-duration:6s}
+@keyframes flow{from{transform:translateX(-15%)}to{transform:translateX(15%)}}
+.bank{position:absolute;left:0;right:0;height:48px;background:#9bdf67;border-bottom:6px solid #4eaa59}
+.bank.top{top:0}.bank.bottom{bottom:0;border:0;border-top:6px solid #4eaa59}
+.bank:after{content:"🌼　🌿　🌸　🌱　🌼　🌿　🌸　🌱";display:block;font-size:22px;line-height:38px}
+.pad{position:absolute;top:43%;width:35%;min-height:100px;border:4px solid #3d9c46;border-radius:48% 52% 42% 58%;background:radial-gradient(ellipse at 35% 30%,#b7f779,#62cf5c 65%,#32a54d);box-shadow:0 7px 0 #267e53;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;cursor:pointer;transition:transform .2s;z-index:2}
+.pad:hover{transform:translateY(-6px) rotate(-2deg)}
+.pad .leaf{font-size:27px}.pad strong{font-size:clamp(13px,2.4vw,18px);color:#164e31}
+#left{left:7%}#right{right:7%;top:52%}
+#frog{position:absolute;z-index:4;left:calc(50% - 30px);top:24%;font-size:54px;filter:drop-shadow(2px 4px 1px #226c5d);transition:all .5s}
+#questionBox{max-width:800px;margin:12px auto;background:#fff;padding:18px;border-radius:20px;border:3px solid #b5e8a4;box-shadow:0 5px 0 #88c7a5}
+#question{font-size:clamp(18px,3vw,24px);font-weight:bold;margin:5px 0 14px}
+.answers{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+button{font:inherit;font-weight:bold;border:0;border-radius:15px;padding:13px 19px;cursor:pointer;box-shadow:0 4px 0 #0002;transition:transform .15s}
+button:hover{transform:translateY(-2px)}
+.answer{background:#ffe47a;color:#614817;max-width:95%;min-width:190px}
+#message{min-height:28px;font-weight:bold;margin:12px 0 4px}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px}
+#start{background:#168b58;color:white}#restart{background:#ffb6cb;color:#713149}
+#pause{background:#b9c9ff;color:#293f7c}
+footer{padding:8px 12px 20px;font-size:13px}
+.overlay{position:absolute;inset:0;background:#103b5bdc;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;padding:20px}
+.overlay h2{font-size:clamp(27px,5vw,40px);margin:4px}
+.overlay p{max-width:520px;font-size:18px}
+.hidden{display:none!important}
+@media(max-width:520px){#game{height:340px;margin:8px} .pad{width:40%;min-height:100px}#left{left:3%}#right{right:3%}#frog{font-size:45px}#questionBox{margin:10px;padding:13px}.answer{min-width:140px;padding:12px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🐸 Rana Exploradora</h1>
+<p>¡Cruza el río saltando sobre las hojas y demuestra que eres experto en archivos!</p>
+<div class="stats">
+<div class="pill">⭐ Saltos: <span id="score">0</span></div>
+<div class="pill">🏆 Récord: <span id="record">0</span></div>
+<div class="pill">🌈 Zona: <span id="level">Prado</span></div>
+</div>
+</header>
+
+<main>
+<section id="game" aria-label="Río y hojas para saltar">
+<div class="water"></div><div class="water"></div><div class="water"></div>
+<div class="bank top"></div><div class="bank bottom"></div>
+<div id="frog">🐸</div>
+<div class="pad" id="left" role="button" tabindex="0" aria-label="Elegir hoja izquierda" onclick="choose(0)">
+<span class="leaf">🍃</span><strong id="option0">Hoja izquierda</strong>
+</div>
+<div class="pad" id="right" role="button" tabindex="0" aria-label="Elegir hoja derecha" onclick="choose(1)">
+<span class="leaf">🌿</span><strong id="option1">Hoja derecha</strong>
+</div>
+<div class="overlay" id="overlay">
+<div style="font-size:65px">🐸🌊🍃</div>
+<h2>¡Aventura en el río!</h2>
+<p>Responde preguntas sobre unidades, carpetas, archivos y el Explorador de archivos. Elige la hoja correcta para que la rana pueda saltar. ¡Si eliges mal, caerás al agua!</p>
+<button id="start" onclick="startGame()">¡Comenzar aventura!</button>
+</div>
+</section>
+
+<section id="questionBox">
+<div>🧠 <strong>Reto informático</strong></div>
+<div id="question">¡Prepárate para el primer salto!</div>
+<div class="answers">
+<button class="answer" id="ans0" onclick="choose(0)">🍃 Hoja 1</button>
+<button class="answer" id="ans1" onclick="choose(1)">🌿 Hoja 2</button>
+</div>
+<div id="message" aria-live="polite">¡Tú puedes, explorador!</div>
+</section>
+
+<div class="controls">
+<button id="pause" onclick="togglePause()">⏸ Pausar</button>
+<button id="restart" onclick="restartGame()">🔄 Volver a empezar</button>
+</div>
+</main>
+<footer>💡 Consejo: las carpetas organizan archivos y las unidades permiten guardar información.</footer>
+
+<script>
+const questions=[
+["¿Qué es una carpeta?","Un lugar para organizar archivos","Un tipo de teclado",0],
+["¿Qué contiene normalmente un archivo?","Información, como un texto o una imagen","Agua para la computadora",0],
+["¿Cuál es una unidad de almacenamiento?","Disco local (C:)","La barra de título",0],
+["¿Para qué sirve una memoria USB?","Guardar y transportar archivos","Mover el puntero de la pantalla",0],
+["¿Dónde puedes ver archivos y carpetas en el Explorador?","En el área de contenido","En el botón de encendido",0],
+["¿Para qué sirve el cuadro de búsqueda?","Encontrar archivos y carpetas","Apagar el monitor",0],
+["¿Qué muestra la barra de direcciones?","La ubicación de la carpeta actual","La hora de la clase",0],
+["¿Qué es una subcarpeta?","Una carpeta dentro de otra carpeta","Un archivo de sonido",0],
+["¿Qué opción permite duplicar un archivo en otro lugar?","Copiar y después pegar","Borrar y apagar",0],
+["Si quieres cambiar un archivo de carpeta, ¿qué puedes hacer?","Cortarlo y pegarlo en la nueva ubicación","Cambiar el fondo de pantalla",0],
+["¿Qué extensión suele identificar un documento PDF?",".pdf",".mp3",0],
+["¿Qué extensión suele corresponder a una imagen JPEG?",".jpg",".exe",0],
+["¿Qué extensión se usa habitualmente para un documento de Word?",".docx",".png",0],
+["¿Para qué sirve la papelera de reciclaje?","Guardar temporalmente elementos eliminados","Guardar solamente música",0],
+["¿Qué nombre ayuda a encontrar un archivo?","Tarea_Ciencias.docx","Archivo_nuevo_final_final_???",0],
+["¿Qué hace el panel de navegación?","Ayuda a desplazarte por carpetas y ubicaciones","Aumenta el volumen de los altavoces",0],
+["¿Cómo puedes organizar mejor tus tareas escolares?","Crear carpetas por asignatura","Guardar todo sin nombres en una sola carpeta",0],
+["¿Qué hace el botón Atrás del Explorador?","Vuelve a la ubicación anterior","Borra la carpeta abierta",0],
+["¿Qué unidad suele representar un disco interno en Windows?","C:","Zapatilla",0],
+["¿Cuál de estos nombres parece una carpeta?","Matemáticas","foto.jpg",0],
+["¿Qué puedes hacer para encontrar archivos fácilmente?","Ordenarlos por nombre o fecha","Cambiar de silla",0],
+["¿Qué muestra la barra de título de una ventana?","El nombre de la ventana o aplicación","El contenido de la memoria USB",0],
+["¿Qué debes hacer antes de retirar una memoria USB?","Expulsarla de forma segura cuando sea posible","Tirar del cable mientras copia",0],
+["¿Cuál es una buena práctica al guardar trabajos?","Usar nombres claros y carpetas organizadas","Poner todos los archivos el mismo nombre",0],
+["¿Qué es un archivo de imagen?","Un archivo que contiene una imagen o fotografía","Una carpeta que contiene el teclado",0],
+["¿Qué diferencia hay entre archivo y carpeta?","El archivo contiene información; la carpeta ayuda a organizarla","Son exactamente lo mismo",0],
+["¿Qué suele ocurrir al hacer doble clic en una carpeta?","Se abre para mostrar su contenido","Se convierte en una memoria USB",0],
+["¿Dónde puedes ver las unidades disponibles?","En Este equipo","En el reloj de la pared",0],
+["¿Qué conviene hacer con archivos que ya no necesitas?","Revisarlos y eliminarlos si corresponde","Cambiarles el nombre a todos sin mirar",0],
+["¿Qué herramienta te ayuda a explorar carpetas y unidades?","Explorador de archivos","Calculadora de bolsillo",0]
+];
+const zones=[
+{name:"Prado",sky:"#7de3ed",water:"#168fbd",leaf:"#62cf5c"},
+{name:"Arrecife",sky:"#77d8ff",water:"#167bc5",leaf:"#58e0a0"},
+{name:"Atardecer",sky:"#ffc4a0",water:"#d46caa",leaf:"#a5db51"},
+{name:"Bosque mágico",sky:"#c9b5ff",water:"#655ac7",leaf:"#74df91"},
+{name:"Isla dulce",sky:"#ffb6df",water:"#d779cc",leaf:"#c1ed67"},
+{name:"Laguna arcoíris",sky:"#b8f5d3",water:"#48a9d6",leaf:"#ffda64"}
+];
+let score=0,record=0,deck=[],current=null,locked=true,paused=false,ended=false,turn=0;
+const $=id=>document.getElementById(id);
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startGame(){score=0;turn=0;ended=false;paused=false;locked=false;deck=shuffle([...questions]);$("overlay").classList.add("hidden");$("pause").textContent="⏸ Pausar";updateStats();nextQuestion()}
+function updateStats(){$("score").textContent=score;$("record").textContent=record;$("level").textContent=zones[Math.floor(score/5)%zones.length].name}
+function nextQuestion(){
+if(deck.length===0)deck=shuffle([...questions]);
+current=deck.pop();
+let right=current[3],wrong=right===0?1:0;
+let options=shuffle([{text:current[1+right],correct:true},{text:current[1+wrong],correct:false}]);
+$("question").textContent=current[0];
+options.forEach((o,i)=>{$("option"+i).textContent=o.text;$("ans"+i).textContent=(i===0?"🍃 ":"🌿 ")+o.text;$("ans"+i).dataset.correct=o.correct?"1":"0";$("pad"+i);});
+$("left").style.background="radial-gradient(ellipse at 35% 30%,#c8ff83,#62cf5c 65%,#32a54d)";
+$("right").style.background="radial-gradient(ellipse at 35% 30%,#c8ff83,#62cf5c 65%,#32a54d)";
+$("message").textContent="Elige una de las dos hojas para saltar.";
+$("ans0").disabled=$("ans1").disabled=false;
+}
+function choose(i){
+if(locked||paused||ended)return;
+let button=$("ans"+i);
+if(button.disabled)return;
+locked=true;
+if(button.dataset.correct==="1"){
+score++;record=Math.max(record,score);
+let z=zones[Math.floor(score/5)%zones.length];
+$("game").style.background=`linear-gradient(${z.sky},${z.water})`;
+document.querySelectorAll(".pad").forEach(p=>p.style.background=`radial-gradient(ellipse at 35% 30%,#e2ff9e,${z.leaf} 65%,#329e57)`);
+$("frog").style.left=i===0?"calc(25% - 25px)":"calc(75% - 25px)";
+$("frog").style.top=(turn%2===0?"25%":"32%");
+$("message").textContent=["¡Excelente salto! 🎉","¡Correcto, explorador! ⭐","¡La rana avanza! 🐸","¡Muy bien! 🌟"][Math.floor(Math.random()*4)];
+updateStats();
+$("ans0").disabled=$("ans1").disabled=true;
+setTimeout(()=>{if(!ended&&!paused){turn++;locked=false;nextQuestion()}},850);
+}else{
+ended=true;
+$("frog").style.top="67%";$("frog").style.transform="rotate(70deg)";
+$("message").textContent="¡Chof! 🌊 Esa respuesta no era correcta.";
+$("ans0").disabled=$("ans1").disabled=true;
+setTimeout(()=>{
+$("overlay").classList.remove("hidden");
+$("overlay").innerHTML=`<div style="font-size:64px">💦🐸</div><h2>¡Chof! ¡Al agua!</h2><p>Tuviste <b>${score}</b> saltos correctos. ¡Repasa el Explorador de archivos e inténtalo otra vez!</p><button id="start" onclick="startGame()">🔁 ¡Intentar de nuevo!</button>`;
+},650);
+}
+}
+function togglePause(){
+if(ended||locked&&score===0)return;
+paused=!paused;
+$("pause").textContent=paused?"▶ Continuar":"⏸ Pausar";
+if(paused){
+$("overlay").classList.remove("hidden");
+$("overlay").innerHTML='<div style="font-size:60px">⏸️🐸</div><h2>¡Pausa exploradora!</h2><p>Descansa un momento. El río te espera.</p><button id="start" onclick="togglePause()">▶ Continuar aventura</button>';
+}else{$("overlay").classList.add("hidden")}
+}
+function restartGame(){
+score=0;turn=0;ended=false;paused=false;locked=true;
+$("frog").style.left="calc(50% - 30px)";$("frog").style.top="24%";$("frog").style.transform="";
+$("game").style.background="linear-gradient(#78ddeb 0%,#30b9d0 45%,#148bb7 100%)";
+$("overlay").classList.remove("hidden");
+$("overlay").innerHTML='<div style="font-size:65px">🐸🌊🍃</div><h2>¡Aventura en el río!</h2><p>Elige la hoja con la respuesta correcta y ayuda a la rana a cruzar.</p><button id="start" onclick="startGame()">¡Comenzar aventura!</button>';
+$("question").textContent="¡Prepárate para el primer salto!";
+$("message").textContent="¡Tú puedes, explorador!";
+$("pause").textContent="⏸ Pausar";updateStats()
+}
+document.querySelectorAll(".pad").forEach((p,i)=>p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();choose(i)}}));
+updateStats();
+</script>
+</body>
+</html>
