@@ -84,6 +84,17 @@ const PORTAL = {
         disponible:true,
         nuevo:true,
         destacado:true
+      },
+       {
+        id:"PacMaze",
+        nombre:"PacMaze",
+        descripcion:"Lleva al PacMan a la respuesta correcta.",
+        icono:"🖥️",
+        archivo:"juegos/5primaria/pacmaze.html",
+        categoria:"Extensiones",
+        disponible:true,
+        nuevo:true,
+        destacado:true
       }
     ]},
     {id:"6primaria",nombre:"6.º Primaria",icono:"🏆",descripcion:"Retos y proyectos de computación.",juegos:[]},
