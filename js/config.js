@@ -3,7 +3,7 @@
 disponible: true = visible para alumnos / false = oculto
 nuevo: true = etiqueta NUEVO / destacado: true = etiqueta DESTACADO */
 const PORTAL = {
-  categorias:["Computadora","Periféricos","Hardware","Extensiones","Software","Word","Excel","PowerPoint","Internet","Programación","IA","Otros"],
+  categorias:["Computadora","Periféricos","Hardware","Teclado","Extensiones","Software","Word","Excel","PowerPoint","Internet","Programación","IA","Otros"],
   niveles:[
     {id:"preescolar",nombre:"Preescolar",icono:"🧸",descripcion:"Actividades para aprender jugando.",juegos:[]},
     {id:"1primaria",nombre:"1.º Primaria",icono:"🌟",descripcion:"Primeras habilidades de computación.",juegos:[
@@ -15,7 +15,7 @@ const PORTAL = {
         archivo:"juegos/1primaria/busqueda-computadora.html",
         categoria:"Computadora",
         disponible:true,
-        nuevo:true,
+        nuevo:false,
         destacado:true
       },
       {
@@ -25,7 +25,7 @@ const PORTAL = {
         icono:"🧩",
         archivo:"juegos/1primaria/rompecabezas-computadora.html",
         categoria:"Computadora",
-        disponible:true,
+        disponible:false,
         nuevo:true,
         destacado:true
       },
@@ -42,7 +42,28 @@ const PORTAL = {
       }
     ]},
     {id:"2primaria",nombre:"2.º Primaria",icono:"🖥️",descripcion:"Partes y uso básico de la computadora.",juegos:[
-      {id:"computadora-basica",nombre:"Monitor, ratón, teclado y gabinete",descripcion:"Reconoce las partes principales de una computadora.",icono:"🖥️",archivo:"juegos/2primaria/computadora-basica.html",categoria:"Hardware",disponible:true,nuevo:false,destacado:true}
+      {
+        id:"computadora-basica",
+        nombre:"Monitor, ratón, teclado y gabinete",
+        descripcion:"Reconoce las partes principales de una computadora.",
+        icono:"🖥️",
+        archivo:"juegos/2primaria/computadora-basica.html",
+        categoria:"Hardware",
+        disponible:true,
+        nuevo:false,
+        destacado:true
+      },
+      {
+        id:"desafíos-teclado",
+        nombre:"Desafíos con el teclado",
+        descripcion:"Completa las misiones utilizando Enter, Barra espaciadora, Retroceso o BloqMayús.",
+        icono:"⏳",
+        archivo:"juegos/2primaria/desafios-teclado.html",
+        categoria:"Teclado",
+        disponible:true,
+        nuevo:true,
+        destacado:true
+      }
     ]},
     {id:"3primaria",nombre:"3.º Primaria",
      icono:"🎮",
