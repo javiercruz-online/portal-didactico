@@ -1,0 +1,94 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Desafíos con el teclado</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Arial;background:linear-gradient(135deg,#ffdf38 0%,#ff65b7 48%,#38d9ff 100%);color:#202653;min-height:100vh}.wrap{max-width:1000px;margin:auto;padding:clamp(8px,1.5vh,16px);min-height:100svh;display:flex;flex-direction:column}header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-weight:1000;color:#6638c7;font-size:clamp(1.3rem,4vw,2rem)}main{background:#fffffffa;border:5px solid white;border-radius:28px;padding:clamp(12px,2.4vh,26px);margin:clamp(8px,1.5vh,16px) 0;min-height:0;flex:1;display:flex;flex-direction:column;justify-content:center;box-shadow:0 10px 0 #762ed0}h1{font-size:clamp(2rem,5vw,3.2rem);color:#6638c7;margin:.2em 0}h2{color:#6638c7}p{font-size:1.12rem;line-height:1.5}.center{text-align:center}.hidden{display:none!important}button{border:0;border-radius:17px;padding:14px 20px;background:#ffe12e;color:#202653;font-weight:1000;font-size:1rem;cursor:pointer;box-shadow:0 5px 0 #d49b20}button:active{transform:translateY(4px);box-shadow:0 1px 0 #d49b20}.big{background:#ff168d;color:white;font-size:1.2rem}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:center}.art{font-size:clamp(5rem,15vw,9rem);text-align:center;background:linear-gradient(145deg,#36e4ff,#ff70c5);border-radius:25px;padding:25px}.keys{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}.key{background:white;border:4px solid #d9d0ff;border-bottom-width:8px;border-radius:14px;padding:10px;min-width:105px;text-align:center;font-weight:1000}.key b{display:block;font-size:1.8rem;color:#6638c7}.hud{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.hud span,.pill{background:#d9faff;padding:9px 13px;border-radius:14px;font-weight:900}.bar{height:13px;background:#e3d8ff;border-radius:20px;margin:14px 0;overflow:hidden}.bar div{height:100%;background:linear-gradient(90deg,#00cfff,#8a35ff,#ff168d);width:0}.mission{background:linear-gradient(100deg,#fff05a,#ffb5e4);border:3px dashed #ff329c;border-radius:20px;padding:16px;text-align:center}.emoji{font-size:2.8rem}.mission h2{margin:5px}.instruction{font-weight:900;font-size:1.3rem}.stage{margin:17px 0;background:linear-gradient(135deg,#b8f5ff,#d9c5ff);border:2px solid #66dfff;border-radius:20px;min-height:clamp(120px,22vh,190px);display:flex;align-items:center;justify-content:center;text-align:center;padding:18px}.prompt{font-size:clamp(1.7rem,5vw,2.6rem);font-weight:1000}.feedback{text-align:center;min-height:38px;font-weight:1000;color:#21875d;font-size:1.1rem}.actions{text-align:center}.bonus{background:linear-gradient(135deg,#4c2caa,#9c4ed6);color:white;border-radius:22px;padding:15px}.bonus h2{color:white}
+.bonus-field{position:relative;overflow:hidden;min-height:clamp(230px,34vh,330px);width:100%;border-radius:18px;background:linear-gradient(180deg,#24105f,#4820a0 65%,#1b0d4b);border:3px solid #ffdf3d;padding:12px}
+.bonus-instruction{position:relative;z-index:3;color:#fff;font-size:clamp(1.15rem,3vw,1.7rem);font-weight:1000;text-shadow:0 2px 4px #16083e}
+.falling-key{position:absolute;top:-90px;display:flex;align-items:center;justify-content:center;flex-direction:column;width:clamp(68px,10vw,88px);height:76px;border:4px solid #fff;border-bottom:9px solid #ffcf35;border-radius:17px;background:linear-gradient(145deg,#fff,#d9f6ff);color:#5425a6;font-weight:1000;box-shadow:0 7px 0 #25105f,0 0 18px #fff9;animation:keyfall var(--fall-time,4s) linear forwards;z-index:2}
+.falling-key strong{font-size:1.6rem}.falling-key small{font-size:.65rem}
+@keyframes keyfall{0%{transform:translateY(-20px) rotate(-12deg)}50%{transform:translateY(145px) rotate(9deg)}100%{transform:translateY(370px) rotate(-8deg);opacity:.15}}
+.bonus-meter{height:10px;background:#ffffff55;border-radius:20px;overflow:hidden;margin:10px auto;max-width:420px}
+.bonus-meter span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ffe33b,#ff4eaa);transform-origin:left;transition:width .2s}
+.bonus-count{color:#fff;font-weight:1000;font-size:1.05rem}
+@media(max-height:760px){.bonus-field{min-height:205px}.falling-key{height:62px}.bonus-instruction{font-size:1.1rem}}@media(max-height:760px){main{padding:9px 14px}.art{padding:10px;font-size:4.5rem}.keys{margin:7px 0}.stage{margin:8px 0}.mission{padding:9px}.emoji{font-size:2.1rem}.instruction{font-size:1.05rem}p{font-size:1rem}}@media(max-width:700px){.hero{grid-template-columns:1fr}.art{order:-1}.key{min-width:130px}}
+@keyframes bounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-12px) scale(1.08)}}.result-pop{animation:pop .35s ease-out}@keyframes pop{from{transform:scale(.7);opacity:.3}to{transform:scale(1);opacity:1}}footer{margin-top:auto}</style></head><body><div class="wrap"><header><div>⌨️ DESAFÍOS CON EL TECLADO</div><span class="pill">🌟 ¡Aprende jugando!</span></header><main>
+<section id="intro"><div class="hero"><div><h1>¡Misión: dominar el teclado!</h1><p>En cada nivel tendrás una misión diferente. Usa <b>Enter</b>, <b>Barra espaciadora</b>, <b>Bloq Mayús</b> y <b>Retroceso</b> para superar retos y ganar estrellas.</p><div class="keys"><div class="key"><b>↵</b>ENTER</div><div class="key"><b>␣</b>ESPACIO</div><div class="key"><b>⇧</b>BLOQ MAYÚS</div><div class="key"><b>⌫</b>RETROCESO</div></div><p><b>Consejo:</b> lee la misión y presiona la tecla indicada. ¡Cada cinco misiones llega un BONUS!</p><button class="big" onclick="startGame()">🚀 ¡COMENZAR!</button></div><div class="art">🧑‍🚀⌨️✨</div></div></section>
+<section id="game" class="hidden"><div class="hud"><span id="level">📊 Nivel 1</span><span id="score">⭐ 0 estrellas</span><span id="streak">🔥 Racha: 0</span></div><div class="bar"><div id="bar"></div></div><div class="mission" id="mission"><div class="emoji" id="emoji">🚀</div><h2 id="title"></h2><p class="instruction" id="instruction"></p></div><div class="stage" id="stage"><div class="prompt" id="prompt"></div></div><div class="feedback" id="feedback" aria-live="polite">¡Tú puedes!</div><div class="actions" id="actions"></div><p class="center"><button onclick="showHelp()">❔ Necesito una pista</button></p></section>
+<section id="endless" class="hidden center"><div style="font-size:5rem">🎉🏆🎉</div><h2 id="endTitle">¡Bonus terminado!</h2><p id="endText"></p><button class="big" onclick="nextMission()">➡️ ¡Continuar jugando!</button></section></main><p class="center">💡 El teclado es una herramienta para crear, aprender y divertirse.</p></div>
+<script>
+const names={enter:"ENTER",space:"BARRA ESPACIADORA",caps:"BLOQ MAYÚS",back:"RETROCESO"};
+const missions=[
+["🚀","Despega la nave","La cuenta regresiva terminó. ¡Presiona ENTER para despegar!","enter","3… 2… 1… ¡DESPEGUE!"],
+["🐸","Salta el charquito","La ranita necesita saltar. Presiona la BARRA ESPACIADORA.","space","🐸　💦　🪷"],
+["🔠","Enciende las letras GRANDES","Activa las mayúsculas con BLOQ MAYÚS.","caps","abc　➜　¿ABC?"],
+["🧹","Borra el dibujo equivocado","Elimina el último símbolo con RETROCESO.","back","🌞　🌈　❌"],
+["🚪","Abre la puerta secreta","Para abrir la puerta, presiona ENTER.","enter","🚪🔒"],
+["🎈","Infla el globo","¡Dale un impulso al globo! Presiona la BARRA ESPACIADORA.","space","🎈"],
+["🦁","Ruge en MAYÚSCULAS","Activa BLOQ MAYÚS para que el león ruja con letras grandes.","caps","grrrrr…"],
+["📝","Corrige la palabra","Elimina la última letra con RETROCESO.","back","GATOO"],
+["🛸","Teletransporte","Confirma el destino presionando ENTER.","enter","🪐 ➜ 🛸"],
+["🏃","Salta los obstáculos","Presiona la BARRA ESPACIADORA para saltar.","space","🏃　🪨　🪨"],
+["🦸","Activa el superpoder","¡Enciende el modo héroe! Presiona BLOQ MAYÚS.","caps","modo normal ➜ SUPER"],
+["🧽","Limpia la pantalla","Quita el último garabato con RETROCESO.","back","✏️✏️✏️"],
+["🐙","Despierta al pulpo","Presiona ENTER para que el pulpo salude.","enter","🐙💤"],
+["🪄","Haz magia","Pulsa la BARRA ESPACIADORA para hacer aparecer estrellas.","space","✨　✨"],
+["📣","Enciende el megáfono","Activa BLOQ MAYÚS para anunciar la fiesta.","caps","¡hola!"],
+["🧼","Borra la mancha","Usa RETROCESO para quitar la última mancha.","back","🟣🟣❌"]];
+let level=0,score=0,streak=0,count=0,expected=null,active=false,bonus=false,step=0,timer=null,bonusClock=null,fallClock=null,bonusSeconds=20,currentMission=null;
+function startGame(){intro.classList.add("hidden");game.classList.remove("hidden");nextMission()}
+function nextMission(){clearTimeout(timer);clearInterval(bonusClock);clearInterval(fallClock);level++;count++;active=true;bonus=false;endless.classList.add("hidden");game.classList.remove("hidden");stage.innerHTML='<div class="prompt" id="prompt"></div>';document.getElementById('prompt').textContent='⌨️ ¡Prepárate!';levelEl.textContent="📊 Nivel "+level;scoreEl.textContent="⭐ "+score+" estrellas";streakEl.textContent="🔥 Racha: "+streak;bar.style.width=(count%5)*20+"%";if(count%5===0){startBonus();return}let m=missions[Math.floor(Math.random()*missions.length)];currentMission=m;expected=m[3];emoji.textContent=m[0];title.textContent=m[1];instruction.textContent=m[2];prompt.textContent=m[4];feedback.textContent="¡Adelante, explorador!";actions.innerHTML='<span class="pill">⌨️ Busca la tecla en tu teclado</span>'}
+const levelEl=document.getElementById("level"),scoreEl=document.getElementById("score"),streakEl=document.getElementById("streak"),bar=document.querySelector(".bar div");
+function startBonus(){
+ bonus=true;step=0;expected=null;bonusSeconds=20;
+ mission.innerHTML='<div class="bonus"><div class="emoji">🎉🎮</div><h2>¡BONUS: Lluvia de teclas!</h2><p>¡Atrapa las teclas antes de que lleguen al suelo! Presiona la tecla que aparece en cada reto.</p></div>';
+ stage.innerHTML='<div class="bonus-field" id="bonusField"><div class="bonus-instruction" id="bonusPrompt">¡PREPÁRATE!</div><div class="bonus-meter"><span id="bonusMeter"></span></div><div class="bonus-count" id="bonusCount">⭐ 5 teclas para atrapar</div></div>';
+ feedback.textContent="¡Que comience la lluvia! 🌟";actions.innerHTML='<span class="pill">¡Usa solo las cuatro teclas aprendidas!</span>';
+ bonusTimerStart();
+}
+function bonusTimerStart(){
+ clearTimeout(timer);clearInterval(bonusClock);clearInterval(fallClock);
+ timer=setTimeout(()=>{if(bonus)finishBonus(false)},20000);
+ bonusClock=setInterval(()=>{bonusSeconds=Math.max(0,bonusSeconds-1);const meter=document.getElementById("bonusMeter");if(meter)meter.style.width=(bonusSeconds/20*100)+"%";const countEl=document.getElementById("bonusCount");if(countEl)countEl.textContent="⏱️ "+bonusSeconds+" segundos · ⭐ "+(5-step)+" teclas";},1000);
+ fallClock=setInterval(dropKey,650);
+ bonusNext();
+}
+function dropKey(){
+ const field=document.getElementById("bonusField");if(!field||!bonus)return;
+ const choices=["enter","space","caps","back"],k=choices[Math.floor(Math.random()*choices.length)];
+ const el=document.createElement("div");el.className="falling-key";el.style.left=(4+Math.random()*78)+"%";el.style.setProperty("--fall-time",(3.2+Math.random()*1.6)+"s");
+ const symbols={enter:"↵",space:"␣",caps:"⇧",back:"⌫"};
+ el.innerHTML="<strong>"+symbols[k]+"</strong><small>"+names[k]+"</small>";field.appendChild(el);
+ setTimeout(()=>el.remove(),5200);
+}
+function bonusNext(){
+ if(step>=5){clearTimeout(timer);clearInterval(bonusClock);clearInterval(fallClock);score+=5;streak++;finishBonus(true);return}
+ expected=["enter","space","caps","back"][Math.floor(Math.random()*4)];
+ const symbols={enter:"↵",space:"␣",caps:"⇧",back:"⌫"};
+ document.getElementById("bonusPrompt").textContent="¡ATRAPA LA TECLA "+symbols[expected]+" "+names[expected]+"!";
+ document.getElementById("bonusCount").textContent="⭐ Reto "+(step+1)+" de 5 · ¡No dejes caer las teclas!";
+}
+function finishBonus(won){clearTimeout(timer);clearInterval(bonusClock);clearInterval(fallClock);bonus=false;active=false;expected=null;game.classList.add("hidden");endless.classList.remove("hidden");endTitle.textContent=won?"¡BONUS SUPERADO!":"¡Buen intento!";endText.textContent=won?"Ganaste cinco estrellas extra. ¡La aventura continúa!":"¡El tiempo terminó! No pasa nada, la aventura continúa.";scoreEl.textContent="⭐ "+score+" estrellas"}
+function showHelp(){if(active)feedback.textContent="Pista: necesitas presionar "+names[expected||"enter"]+". ¡Tú puedes!"}
+function missionResult(m){
+ const results={
+ "Despega la nave":["🚀","¡FUUUUSH! La nave despega y deja una estela de estrellas."],
+ "Salta el charquito":["🐸","¡BOING! La ranita saltó al otro lado del charco."],
+ "Enciende las letras GRANDES":["🔠","¡ABC! Las letras cambiaron a MAYÚSCULAS."],
+ "Borra el dibujo equivocado":["🧹","¡FLOSH! El símbolo desapareció."],
+ "Abre la puerta secreta":["🚪","¡CLIC! La puerta se abrió. ¡Puedes pasar!"],
+ "Infla el globo":["🎈","¡PUFFFF! El globo se infló y salió volando."],
+ "Ruge en MAYÚSCULAS":["🦁","¡¡¡ROOOAR!!! El león lanzó su gran rugido."],
+ "Corrige la palabra":["📝","¡BORRADO! La última letra desapareció: GATO."],
+ "Teletransporte":["🛸","¡ZAAAP! La nave apareció en otro planeta."],
+ "Salta los obstáculos":["🏃","¡BRINCO! El personaje saltó las rocas."],
+ "Activa el superpoder":["🦸","¡ACTIVADO! El héroe encendió su superpoder."],
+ "Limpia la pantalla":["🧽","¡LIMPIO! El garabato desapareció de la pantalla."],
+ "Despierta al pulpo":["🐙","¡Hola! El pulpo despertó y movió sus tentáculos."],
+ "Haz magia":["✨","¡CHIS PUM! Aparecieron estrellas mágicas."],
+ "Enciende el megáfono":["📣","¡¡¡ATENCIÓN!!! El megáfono está encendido."],
+ "Borra la mancha":["🧼","¡FROT FROT! La mancha desapareció."]
+ };
+ const r=results[m[1]]||["🌟","¡La misión se completó!"];
+ return '<div class="result-pop"><div style="font-size:clamp(3.5rem,10vh,6rem);animation:bounce .65s infinite alternate">'+r[0]+'</div><div class="prompt">¡LO LOGRASTE!</div><p style="font-size:1.15rem;font-weight:900">'+r[1]+'</p></div>';
+}
+document.addEventListener("keydown",e=>{if(!active||!expected)return;let k=e.key==="Enter"?"enter":e.code==="Space"?"space":e.key==="CapsLock"?"caps":e.key==="Backspace"?"back":null;if(!k)return;e.preventDefault();if(k===expected){if(bonus){step++;score++;scoreEl.textContent="⭐ "+score+" estrellas";feedback.textContent="¡Sííí! ✨";bonusNext();return}score++;streak++;active=false;expected=null;scoreEl.textContent="⭐ "+score+" estrellas";streakEl.textContent="🔥 Racha: "+streak;feedback.textContent="¡Correcto! ¡Misión cumplida! 🎊";stage.innerHTML=missionResult(currentMission);actions.innerHTML='<button class="big" onclick="nextMission()">Siguiente misión ➜</button>'}else{streak=0;streakEl.textContent="🔥 Racha: 0";feedback.textContent="¡Ups! Esa no era. Lee otra vez la misión e inténtalo de nuevo. 💪"}});
+</script></body></html>
