@@ -1,0 +1,797 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Completa la computadora</title>
+<style>
+:root{
+ --bg:#fff8ed;--panel:#fffdf8;--text:#48596c;
+ --border:#e5d9c8;
+}
+*{box-sizing:border-box}
+html,body{
+ margin:0;width:100%;height:100%;overflow:hidden;
+ background:var(--bg);color:var(--text);
+ font-family:"Trebuchet MS",Arial,sans-serif;
+}
+body{padding:8px}
+.app{
+ width:100%;max-width:1200px;margin:auto;
+ height:calc(100dvh - 16px);
+ display:flex;flex-direction:column;gap:8px;
+}
+header{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;padding:9px 15px;background:var(--panel);
+ border:2px solid var(--border);border-radius:18px;flex-shrink:0;
+}
+h1{font-size:clamp(1.1rem,3vw,1.8rem);margin:0;color:#648da4}
+.subtitle{font-size:.76rem;color:#898780;margin-top:3px}
+.level{
+ background:#f7edcf;border-radius:13px;padding:8px 14px;
+ font-weight:900;white-space:nowrap;font-size:.9rem;
+}
+.instruction{
+ text-align:center;padding:8px 12px;
+ background:#f2e8d9;border:2px solid var(--border);
+ border-radius:15px;font-weight:800;flex-shrink:0;
+ font-size:clamp(.9rem,2.2vw,1.15rem);
+}
+.instruction span{color:#638da2}
+.board{
+ flex:1;min-height:0;background:var(--panel);
+ border:2px solid var(--border);border-radius:18px;
+ padding:7px;display:flex;flex-direction:column;
+}
+.canvaswrap{
+ flex:1;min-height:0;position:relative;overflow:hidden;
+ border-radius:13px;background:#fffaf1;
+}
+canvas{
+ display:block;width:100%;height:100%;
+ touch-action:none;cursor:crosshair;
+}
+.toolbar{
+ display:flex;align-items:center;justify-content:center;
+ flex-wrap:wrap;gap:8px;padding:7px 2px 2px;
+ flex-shrink:0;
+}
+.tool{
+ border:2px solid #e7ddcf;background:white;
+ border-radius:14px;padding:8px 12px;
+ display:flex;align-items:center;gap:6px;
+ font-weight:900;color:#48596c;cursor:pointer;
+ font-size:.88rem;box-shadow:0 3px 0 #00000012;
+}
+.tool.active{border:3px solid #638da2;background:#e9f3f7}
+.tool:active{transform:translateY(2px)}
+.colors{display:flex;gap:6px;align-items:center}
+.color{
+ width:31px;height:31px;border-radius:50%;
+ border:3px solid white;box-shadow:0 0 0 1px #c9c4bb;
+ cursor:pointer;flex-shrink:0;
+}
+.color.active{box-shadow:0 0 0 3px #64798a}
+button{font-family:inherit}
+.action{
+ border:0;border-radius:14px;padding:10px 15px;
+ font-size:.9rem;font-weight:900;cursor:pointer;
+ box-shadow:0 3px 0 #00000015;color:#48596c;
+}
+.action:active{transform:translateY(2px)}
+.finish{background:#efd28d}
+.next{background:#b7cba8}
+.hidden{display:none!important}
+.overlay{
+ position:fixed;inset:0;background:#fff8edee;
+ display:grid;place-items:center;padding:15px;z-index:10;
+}
+.modal{
+ width:min(460px,100%);background:white;
+ border:3px solid var(--border);border-radius:24px;
+ padding:22px;text-align:center;
+ box-shadow:0 8px 28px #46566b20;
+}
+.modal .emoji{font-size:3rem}
+.modal h2{color:#638da2;font-size:1.7rem;margin:8px 0}
+.modal p{color:#77766f;line-height:1.5}
+.resultText{font-size:1.2rem;font-weight:900;color:#638da2;margin:15px 0}
+.resultName{
+ display:inline-block;background:#f7edcf;border-radius:13px;
+ padding:8px 14px;color:#806c45;margin-top:6px;
+}
+.modalBtn{
+ background:#b7cba8;border:0;border-radius:14px;
+ padding:12px 22px;font-weight:900;cursor:pointer;
+}
+.hint{font-size:.7rem;text-align:center;color:#898780;padding:0 0 2px}
+@media(max-width:700px){
+ body{padding:5px}
+ .app{height:calc(100dvh - 10px);gap:5px}
+ header{padding:7px 10px}
+ .subtitle{font-size:.65rem}
+ .instruction{padding:6px}
+ .board{padding:4px}
+ .tool{padding:6px 8px;font-size:.76rem}
+ .color{width:27px;height:27px}
+ .action{padding:9px 12px;font-size:.8rem}
+ .toolbar{gap:5px}
+}
+@media(max-height:500px){
+ body{padding:4px}
+ .app{height:calc(100dvh - 8px);gap:4px}
+ header{padding:5px 10px}
+ .instruction{padding:4px;font-size:.85rem}
+ .toolbar{padding:3px}
+ .tool{padding:5px 7px}
+ .color{width:24px;height:24px}
+ .action{padding:6px 10px}
+ .subtitle{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<header>
+ <div>
+  <h1>🖍️ Completa la computadora</h1>
+  <div class="subtitle">¡Dibuja la parte que falta!</div>
+ </div>
+ <div class="level" id="level">Nivel 1</div>
+</header>
+
+<div class="instruction">
+ ¡Completa el dibujo! <span>Sigue la guía punteada.</span>
+</div>
+
+<section class="board">
+ <div class="canvaswrap">
+  <canvas id="canvas"></canvas>
+ </div>
+
+ <div class="toolbar">
+  <button class="tool active" id="pencil">✏️ Lápiz</button>
+  <button class="tool" id="eraser">🧽 Borrador</button>
+
+  <div class="colors">
+   <button class="color active" data-color="#64798a" style="background:#64798a" title="Azul gris"></button>
+   <button class="color" data-color="#d97861" style="background:#d97861" title="Coral"></button>
+   <button class="color" data-color="#6c9877" style="background:#6c9877" title="Verde"></button>
+   <button class="color" data-color="#e1b84f" style="background:#e1b84f" title="Amarillo"></button>
+   <button class="color" data-color="#9b80bb" style="background:#9b80bb" title="Morado"></button>
+   <button class="color" data-color="#d58baf" style="background:#d58baf" title="Rosa"></button>
+   <button class="color" data-color="#e58b43" style="background:#e58b43" title="Naranja"></button>
+   <button class="color" data-color="#4eaa9b" style="background:#4eaa9b" title="Turquesa"></button>
+  </div>
+
+  <button class="tool" id="clear">🗑️ Limpiar</button>
+  <button class="action finish" id="done">🌟 ¡Terminé!</button>
+  <button class="action next hidden" id="next">➡️ Siguiente</button>
+ </div>
+ <div class="hint">Usa el lápiz para dibujar y el borrador para corregir.</div>
+</section>
+</div>
+
+<div class="overlay" id="welcome">
+ <div class="modal">
+  <div class="emoji">🖥️✏️</div>
+  <h2>¡Completa la computadora!</h2>
+  <p>Hay computadoras a las que les falta una pieza. Dibuja la parte que falta siguiendo la guía.</p>
+  <p>¡Puedes usar muchos colores! Si te equivocas, usa el borrador.</p>
+  <button class="modalBtn" id="start">¡Vamos a dibujar! 🎨</button>
+ </div>
+</div>
+
+<div class="overlay hidden" id="result">
+ <div class="modal">
+  <div class="emoji">🎨🌟</div>
+  <h2>¡Excelente dibujo!</h2>
+  <div class="resultText">
+   La parte que dibujaste es:
+   <br><span class="resultName" id="partName"></span>
+  </div>
+  <p>¡Gracias por completar la computadora!</p>
+  <button class="modalBtn" id="continue">¡Otro reto! ➡️</button>
+ </div>
+</div>
+
+<script>
+(()=>{
+'use strict';
+
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);
+
+const parts={
+ gabinete:{name:'Gabinete',emoji:'🗄️'},
+ monitor:{name:'Monitor',emoji:'🖥️'},
+ teclado:{name:'Teclado',emoji:'⌨️'},
+ raton:{name:'Ratón',emoji:'🖱️'}
+};
+
+const partKeys=Object.keys(parts);
+
+const colors=[
+ '#64798a','#d97861','#6c9877','#e1b84f',
+ '#9b80bb','#d58baf','#e58b43','#4eaa9b'
+];
+
+let level=0;
+let missing='gabinete';
+let layoutIndex=0;
+let styleIndex=0;
+let drawing=false;
+let tool='pencil';
+let color=colors[0];
+let strokes=[];
+let current=null;
+let finished=false;
+let W=800,H=500,scale=1,ox=0,oy=0;
+let layouts=[];
+
+function rand(n){
+ return Math.floor(Math.random()*n);
+}
+
+function shuffle(a){
+ for(let i=a.length-1;i>0;i--){
+  let j=rand(i+1);
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+
+function resize(){
+ let r=canvas.getBoundingClientRect();
+ let dpr=Math.min(window.devicePixelRatio||1,2);
+
+ canvas.width=Math.max(1,Math.round(r.width*dpr));
+ canvas.height=Math.max(1,Math.round(r.height*dpr));
+
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+
+ W=r.width;
+ H=r.height;
+
+ scale=Math.min(W/800,H/500);
+ ox=(W-800*scale)/2;
+ oy=(H-500*scale)/2;
+
+ render();
+}
+
+function rr(x,y,w,h,r,fill,stroke='#65788a',lw=4){
+ ctx.beginPath();
+ ctx.roundRect(x,y,w,h,r);
+ if(fill){
+  ctx.fillStyle=fill;
+  ctx.fill();
+ }
+ if(stroke){
+  ctx.lineWidth=lw;
+  ctx.strokeStyle=stroke;
+  ctx.stroke();
+ }
+}
+
+function ln(x1,y1,x2,y2,c='#65788a',lw=4){
+ ctx.beginPath();
+ ctx.moveTo(x1,y1);
+ ctx.lineTo(x2,y2);
+ ctx.strokeStyle=c;
+ ctx.lineWidth=lw;
+ ctx.lineCap='round';
+ ctx.stroke();
+}
+
+function cir(x,y,r,c,stroke='#65788a',lw=3){
+ ctx.beginPath();
+ ctx.arc(x,y,r,0,Math.PI*2);
+ ctx.fillStyle=c;
+ ctx.fill();
+ ctx.strokeStyle=stroke;
+ ctx.lineWidth=lw;
+ ctx.stroke();
+}
+
+function txt(t,x,y,size=20,c='#65788a'){
+ ctx.font=`bold ${size}px Trebuchet MS,Arial`;
+ ctx.fillStyle=c;
+ ctx.textAlign='center';
+ ctx.textBaseline='middle';
+ ctx.fillText(t,x,y);
+}
+
+function path(points,color='#65788a',lw=4){
+ ctx.beginPath();
+ ctx.moveTo(points[0][0],points[0][1]);
+ points.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));
+ ctx.strokeStyle=color;
+ ctx.lineWidth=lw;
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+ ctx.stroke();
+}
+
+function guideShape(fn){
+ ctx.save();
+ ctx.strokeStyle='#aaa398';
+ ctx.fillStyle='#f2e8d9';
+ ctx.lineWidth=5;
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+ ctx.setLineDash([10,9]);
+ fn();
+ ctx.stroke();
+ ctx.setLineDash([]);
+ ctx.restore();
+}
+
+function makeLayouts(){
+ const presets=[
+  {m:[220,155],g:[590,165],k:[550,350],r:[170,340]},
+  {m:[430,155],g:[180,165],k:[250,350],r:[650,340]},
+  {m:[250,155],g:[590,165],k:[550,350],r:[170,340]},
+  {m:[430,155],g:[210,165],k:[250,350],r:[650,340]},
+  {m:[220,155],g:[590,165],k:[550,350],r:[170,340]},
+  {m:[430,155],g:[180,165],k:[250,350],r:[650,340]},
+  {m:[250,155],g:[590,165],k:[550,350],r:[170,340]},
+  {m:[430,155],g:[210,165],k:[250,350],r:[650,340]}
+ ];
+ layouts=shuffle(presets.slice());
+}
+
+function background(){
+ const bgs=[
+  '#fffaf1','#f5f3e9','#f8f1e4','#f3f7ed','#f7f0ec'
+ ];
+ ctx.fillStyle=bgs[styleIndex%bgs.length];
+ ctx.fillRect(0,0,800,500);
+
+ const decos=[
+  [['🌼',70,70],['☁️',720,70],['⭐',80,440],['🌿',710,430]],
+  [['☁️',80,60],['🍎',720,65],['⭐',75,430],['🌷',720,430]],
+  [['🌈',90,70],['⭐',720,70],['🌼',80,430],['🍀',720,430]],
+  [['🌷',70,65],['☁️',730,65],['🍀',80,430],['⭐',710,430]],
+  [['⭐',70,60],['🌼',720,60],['☁️',80,430],['🌷',720,430]]
+ ];
+ decos[styleIndex%decos.length].forEach(d=>txt(d[0],d[1],d[2],30));
+
+ const mesa=[
+  '#ead9bc','#d8e5d5','#e9d6cb','#d6e2e8','#e9dfb9'
+ ];
+ rr(75,405,650,24,12,mesa[styleIndex%mesa.length],null);
+ rr(115,429,16,48,4,'#d2bea0',null);
+ rr(665,429,16,48,4,'#d2bea0',null);
+
+ if(styleIndex%2===0){
+  txt('📚',110,375,28);
+  txt('🌵',700,375,28);
+ }else{
+  txt('🧸',105,375,28);
+  txt('✏️',700,375,28);
+ }
+}
+
+function monitor(x,y,guide=false){
+ let c=['#a8cbdc','#e8b6ae','#b7cba8','#efd28d','#c7b8d9'][styleIndex%5];
+
+ if(guide){
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-120,y-85,240,155,20)});
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-105,y-70,210,120,12)});
+  guideShape(()=>{
+   ctx.beginPath();
+   ctx.moveTo(x-20,y+70);
+   ctx.lineTo(x-20,y+105);
+   ctx.lineTo(x+20,y+105);
+   ctx.lineTo(x+20,y+70);
+   ctx.moveTo(x-65,y+105);
+   ctx.lineTo(x+65,y+105);
+  });
+  guideShape(()=>{ctx.beginPath();ctx.arc(x,y+58,6,0,Math.PI*2)});
+  return;
+ }
+
+ rr(x-120,y-85,240,155,20,c);
+ rr(x-105,y-70,210,120,12,'#fffaf1');
+ cir(x-42,y-15,24,'#efd28d','#65788a',2);
+
+ ctx.fillStyle='#b7cba8';
+ ctx.beginPath();
+ ctx.moveTo(x-95,y+30);
+ ctx.lineTo(x-40,y-20);
+ ctx.lineTo(x+5,y+30);
+ ctx.closePath();
+ ctx.fill();
+
+ ctx.fillStyle='#a8cbdc';
+ ctx.beginPath();
+ ctx.moveTo(x-15,y+30);
+ ctx.lineTo(x+40,y-25);
+ ctx.lineTo(x+95,y+30);
+ ctx.closePath();
+ ctx.fill();
+
+ rr(x-20,y+70,40,35,5,c);
+ rr(x-70,y+105,140,14,7,'#d5c5aa');
+ cir(x,y+58,6,'#e1b84f');
+ cir(x,y-76,4,'#64798a','#64798a',1);
+ cir(x+82,y+57,5,'#d97861','#64798a',1);
+ cir(x+96,y+57,5,'#6c9877','#64798a',1);
+}
+
+function gabinete(x,y,guide=false){
+ let c=['#c7b8d9','#a8cbdc','#e8b6ae','#b7cba8','#efd28d'][styleIndex%5];
+
+ if(guide){
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-65,y-110,130,220,18)});
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-48,y-90,96,115,10)});
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-38,y+38,76,45,7)});
+  guideShape(()=>{ctx.beginPath();ctx.arc(x,y+5,13,0,Math.PI*2)});
+  guideShape(()=>{
+   ctx.beginPath();
+   for(let i=0;i<4;i++){
+    ctx.moveTo(x-30,y-55+i*10);
+    ctx.lineTo(x+30,y-55+i*10);
+   }
+  });
+  guideShape(()=>{
+   ctx.beginPath();
+   ctx.moveTo(x-35,y+115);
+   ctx.lineTo(x-35,y+125);
+   ctx.moveTo(x+35,y+115);
+   ctx.lineTo(x+35,y+125);
+  });
+  return;
+ }
+
+ rr(x-65,y-110,130,220,18,c);
+ rr(x-48,y-90,96,115,10,'#fffaf1');
+ rr(x-38,y+38,76,45,7,'#e8e0d1');
+
+ for(let i=0;i<5;i++){
+  ln(x-30,y-60+i*10,x+30,y-60+i*10,'#8295a2',3);
+ }
+
+ rr(x-25,y-5,50,6,3,'#d5c5aa');
+ cir(x,y+5,13,'#efd28d');
+ cir(x,y+5,5,'#64798a');
+ cir(x-25,y+80,6,'#d97861');
+ cir(x+25,y+80,6,'#6c9877');
+ rr(x-35,y+115,12,12,3,'#d5c5aa',null);
+ rr(x+23,y+115,12,12,3,'#d5c5aa',null);
+}
+
+function teclado(x,y,guide=false){
+ if(guide){
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-145,y-55,290,110,16)});
+  guideShape(()=>{
+   ctx.beginPath();
+   for(let row=0;row<4;row++){
+    for(let col=0;col<13;col++){
+     ctx.roundRect(x-130+col*21,y-35+row*22,16,17,3);
+    }
+   }
+  });
+  guideShape(()=>{ctx.beginPath();ctx.roundRect(x-65,y+40,130,14,5)});
+  return;
+ }
+
+ rr(x-145,y-55,290,110,16,'#b7cba8');
+ for(let row=0;row<4;row++){
+  for(let col=0;col<13;col++){
+   let xx=x-130+col*21;
+   let yy=y-35+row*22;
+   rr(xx,yy,16,17,3,
+    (row+col)%4===0?'#efd28d':'#fffaf1',
+    '#8295a2',1.5
+   );
+  }
+ }
+ rr(x-65,y+40,130,14,5,'#e8b6ae','#8295a2',1.5);
+ rr(x+115,y-13,18,38,4,'#efd28d','#8295a2',1.5);
+ txt('↑',x+65,y+35,13);
+ txt('←',x+42,y+35,13);
+ txt('→',x+88,y+35,13);
+}
+
+function raton(x,y,guide=false){
+ if(guide){
+  guideShape(()=>{
+   ctx.beginPath();
+   ctx.moveTo(x,y-70);
+   ctx.bezierCurveTo(x-45,y-70,x-55,y-20,x-45,y+35);
+   ctx.bezierCurveTo(x-35,y+75,x+35,y+75,x+45,y+35);
+   ctx.bezierCurveTo(x+55,y-20,x+45,y-70,x,y-70);
+   ctx.closePath();
+  });
+  guideShape(()=>{
+   ctx.beginPath();
+   ctx.moveTo(x,y-65);
+   ctx.lineTo(x,y-5);
+  });
+  guideShape(()=>{
+   ctx.beginPath();
+   ctx.roundRect(x-9,y-42,18,28,8);
+  });
+  guideShape(()=>{
+   ctx.beginPath();
+   ctx.moveTo(x,y-70);
+   ctx.bezierCurveTo(x+20,y-120,x+70,y-115,x+80,y-90);
+  });
+  return;
+ }
+
+ ctx.fillStyle='#e8b6ae';
+ ctx.strokeStyle='#65788a';
+ ctx.lineWidth=5;
+ ctx.beginPath();
+ ctx.moveTo(x,y-70);
+ ctx.bezierCurveTo(x-45,y-70,x-55,y-20,x-45,y+35);
+ ctx.bezierCurveTo(x-35,y+75,x+35,y+75,x+45,y+35);
+ ctx.bezierCurveTo(x+55,y-20,x+45,y-70,x,y-70);
+ ctx.closePath();
+ ctx.fill();
+ ctx.stroke();
+
+ ln(x,y-65,x,y-5);
+ rr(x-9,y-42,18,28,8,'#efd28d','#65788a',2);
+ path([[x,y-70],[x+20,y-120],[x+70,y-115],[x+80,y-90]],'#65788a',4);
+ cir(x-25,y+15,5,'#b7cba8','#65788a',2);
+ cir(x+25,y+15,5,'#b7cba8','#65788a',2);
+}
+
+function computer(){
+ const p=layouts[layoutIndex%layouts.length];
+
+ if(missing!=='monitor') monitor(...p.m,false);
+ if(missing!=='gabinete') gabinete(...p.g,false);
+ if(missing!=='teclado') teclado(...p.k,false);
+ if(missing!=='raton') raton(...p.r,false);
+
+ if(missing==='monitor') monitor(...p.m,true);
+ if(missing==='gabinete') gabinete(...p.g,true);
+ if(missing==='teclado') teclado(...p.k,true);
+ if(missing==='raton') raton(...p.r,true);
+}
+
+/* Dibuja únicamente los trazos del alumno.
+   El borrador no usa destination-out sobre el lienzo completo. */
+function drawStrokes(){
+ ctx.save();
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+
+ for(const s of strokes){
+  if(s.points.length<2)continue;
+
+  ctx.beginPath();
+  ctx.moveTo(s.points[0].x,s.points[0].y);
+
+  for(let i=1;i<s.points.length;i++){
+   ctx.lineTo(s.points[i].x,s.points[i].y);
+  }
+
+  ctx.globalCompositeOperation='source-over';
+  ctx.strokeStyle=s.color;
+  ctx.lineWidth=s.size;
+  ctx.stroke();
+ }
+
+ ctx.restore();
+}
+
+function render(){
+ if(!W||!H)return;
+
+ ctx.clearRect(0,0,W,H);
+ ctx.save();
+ ctx.translate(ox,oy);
+ ctx.scale(scale,scale);
+
+ background();
+ computer();
+ drawStrokes();
+
+ ctx.restore();
+}
+
+function pos(e){
+ let r=canvas.getBoundingClientRect();
+ return {
+  x:(e.clientX-r.left-ox)/scale,
+  y:(e.clientY-r.top-oy)/scale
+ };
+}
+
+/* Distancia de un punto a un segmento del trazo.
+   Sirve para borrar solo el trazo que toca el borrador. */
+function distanceToSegment(p,a,b){
+ const dx=b.x-a.x;
+ const dy=b.y-a.y;
+
+ if(dx===0&&dy===0){
+  return Math.hypot(p.x-a.x,p.y-a.y);
+ }
+
+ const t=Math.max(0,Math.min(1,
+  ((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy)
+ ));
+
+ const px=a.x+t*dx;
+ const py=a.y+t*dy;
+
+ return Math.hypot(p.x-px,p.y-py);
+}
+
+function eraseAt(point){
+ const radius=17;
+
+ strokes=strokes.filter(stroke=>{
+  const pts=stroke.points;
+
+  if(pts.length===1){
+   return Math.hypot(
+    point.x-pts[0].x,
+    point.y-pts[0].y
+   )>radius+stroke.size/2;
+  }
+
+  for(let i=1;i<pts.length;i++){
+   if(distanceToSegment(point,pts[i-1],pts[i])<
+      radius+stroke.size/2){
+    return false;
+   }
+  }
+
+  return true;
+ });
+
+ render();
+}
+
+canvas.addEventListener('pointerdown',e=>{
+ if(finished)return;
+
+ e.preventDefault();
+ canvas.setPointerCapture(e.pointerId);
+
+ const point=pos(e);
+
+ if(tool==='eraser'){
+  drawing=true;
+  eraseAt(point);
+  return;
+ }
+
+ drawing=true;
+ current={
+  points:[point],
+  color:color,
+  size:6
+ };
+
+ strokes.push(current);
+ render();
+});
+
+canvas.addEventListener('pointermove',e=>{
+ if(!drawing)return;
+
+ e.preventDefault();
+ const point=pos(e);
+
+ if(tool==='eraser'){
+  eraseAt(point);
+  return;
+ }
+
+ if(!current)return;
+
+ current.points.push(point);
+ render();
+});
+
+function stop(){
+ drawing=false;
+ current=null;
+}
+
+canvas.addEventListener('pointerup',stop);
+canvas.addEventListener('pointercancel',stop);
+canvas.addEventListener('lostpointercapture',stop);
+
+function setTool(t){
+ tool=t;
+ $('pencil').classList.toggle('active',t==='pencil');
+ $('eraser').classList.toggle('active',t==='eraser');
+ canvas.style.cursor=t==='eraser'?'cell':'crosshair';
+}
+
+$('pencil').onclick=()=>setTool('pencil');
+$('eraser').onclick=()=>setTool('eraser');
+
+document.querySelectorAll('.color').forEach(b=>{
+ b.onclick=()=>{
+  color=b.dataset.color;
+  setTool('pencil');
+
+  document.querySelectorAll('.color').forEach(x=>{
+   x.classList.remove('active');
+  });
+
+  b.classList.add('active');
+ };
+});
+
+$('clear').onclick=()=>{
+ if(finished)return;
+ strokes=[];
+ render();
+};
+
+function nextLevel(){
+ level++;
+ missing=partKeys[rand(partKeys.length)];
+ layoutIndex=rand(8);
+ styleIndex=rand(5);
+
+ makeLayouts();
+
+ strokes=[];
+ finished=false;
+
+ $('level').textContent='Nivel '+level;
+ $('result').classList.add('hidden');
+ $('done').classList.remove('hidden');
+ $('clear').classList.remove('hidden');
+ $('next').classList.add('hidden');
+
+ setTool('pencil');
+ render();
+}
+
+function finish(){
+ if(finished)return;
+
+ if(strokes.length===0){
+  alert('¡Dibuja primero la parte que falta!');
+  return;
+ }
+
+ finished=true;
+
+ const selectedPart=parts[missing];
+ $('partName').textContent=
+  selectedPart.emoji+' '+selectedPart.name;
+
+ $('result').classList.remove('hidden');
+ $('done').classList.add('hidden');
+ $('clear').classList.add('hidden');
+ $('next').classList.remove('hidden');
+}
+
+$('done').onclick=finish;
+$('next').onclick=nextLevel;
+$('continue').onclick=nextLevel;
+
+$('start').onclick=()=>{
+ $('welcome').classList.add('hidden');
+ level=0;
+ nextLevel();
+};
+
+window.addEventListener('resize',resize);
+
+makeLayouts();
+resize();
+
+})();
+</script>
+<script src="../../js/estadisticas.js"></script>
+</body>
+</html>
